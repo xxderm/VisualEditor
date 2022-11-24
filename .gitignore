@@ -10,6 +10,9 @@
 
 Vendor/
 
+Include/stb_image.h
+Source/stb_image.cpp
+
 # AWS User-specific
 .idea/**/aws.xml
 

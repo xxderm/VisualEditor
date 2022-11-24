@@ -1,12 +1,18 @@
 cmake_minimum_required (VERSION 3.7)
 project (VisualEditor)
 
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_FLAGS -EHsc)
+set(CMAKE_CXX_STANDARD_REQUIRED YES)
+set(CMAKE_CXX_EXTENSIONS OFF)
+
 # Src
-file(GLOB_RECURSE sources CONFIGURE_DEPENDS "*.cpp")
+file(GLOB_RECURSE sources CONFIGURE_DEPENDS "Source/*.cpp")
+include_directories(Include)
 
 # Vendor
-include_directories("/Vendor/sdl/vc/include/")
-link_directories("/Vendor/sdl/vc/lib/x64/")
+include_directories("Vendor/sdl/vc/include/")
+link_directories("Vendor/sdl/vc/lib/x64/")
 
 set(imguisources
         "Vendor/imgui/imgui.cpp"
