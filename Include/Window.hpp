@@ -7,7 +7,7 @@ namespace VisualEditor {
     public:
         Window() = default;
         Window(const Window& other) = delete;
-        bool Initialize(const std::string& title, ImVec2 size, SDL_HitTest hitTest = nullptr);
+        bool Initialize(const std::string& title, ImVec2 size);
         virtual void Render() = 0;
         void Shutdown();
         virtual ~Window() = default;
@@ -16,9 +16,10 @@ namespace VisualEditor {
         void EndFrame();
     protected:
         SDL_Event mEvent{};
+        SDL_Window* mWindow{};
+        bool mRunning = false;
     private:
         SDL_Renderer* mRenderer{};
-        SDL_Window* mWindow{};
         SDL_GLContext mContext{};
     };
 
