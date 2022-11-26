@@ -18,7 +18,6 @@ namespace VisualEditor {
         SDL_Event mEvent{};
         SDL_Window* mWindow{};
         bool mRunning = false;
-    private:
         SDL_Renderer* mRenderer{};
         SDL_GLContext mContext{};
     };

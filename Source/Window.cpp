@@ -4,7 +4,7 @@ static SDL_HitTestResult SDLCALL HitTest(SDL_Window *window, const SDL_Point *pt
     int w, h;
     SDL_GetWindowSize(window, &w, &h);
     const SDL_Rect dragArea[] =  {
-            { 0, 0, w - 50, 20}
+            { 150, 0, w - 180, 20}
     };
     for (const auto & i : dragArea) {
         if (SDL_PointInRect(pt, &i))

@@ -9,6 +9,10 @@ namespace VisualEditor {
         EditorWindow(const EditorWindow& other) = delete;
         void Render() override;
         ~EditorWindow();
+    private:
+        void RenderMenuBar();
+    private:
+        GLuint mExitBtnTexture{};
     };
 
 }
