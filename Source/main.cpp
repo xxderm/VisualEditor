@@ -1,7 +1,7 @@
-#include "EditorWindow.hpp"
+#include "Window.hpp"
 
 int main(int argc, char** argv) {
-    VisualEditor::EditorWindow editorWindow;
-    editorWindow.Render();
+    VisualEditor::Window window;
+    window.Render();
     return 0;
 }
