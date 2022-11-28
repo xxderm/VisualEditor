@@ -1,5 +1,6 @@
 #pragma once
 #include "EditorController.hpp"
+#include "ProjectController.hpp"
 
 namespace VisualEditor {
 
@@ -24,6 +25,9 @@ namespace VisualEditor {
         SDL_Renderer* mRenderer{};
         SDL_GLContext mContext{};
         GLuint mExitBtnTexture{};
+        EditorControllerPtr mEditorController;
+        ProjectControllerPtr mProjectController;
+        std::string mProjectTitle = "Empty project";
     };
 
 }
