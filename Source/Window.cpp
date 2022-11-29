@@ -71,6 +71,12 @@ namespace VisualEditor {
     bool Window::Initialize(const std::string& title, ImVec2 size) {
         if (SDL_Init(SDL_INIT_EVERYTHING) == -1)
             return false;
+        SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
+        SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+        SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
+        SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
         mWindow = SDL_CreateWindow(
                 title.c_str(),
                 SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
@@ -95,6 +101,14 @@ namespace VisualEditor {
         ImGui_ImplOpenGL3_Init();
         SDL_GL_SetSwapInterval(1);
         mRunning = true;
+        glClearDepth(1.f);
+        glDepthFunc(GL_LESS);
+        glEnable(GL_DEPTH_TEST);
+        glShadeModel(GL_FLAT | GL_SMOOTH);
+        glMatrixMode(GL_PROJECTION);
+        glLoadIdentity();
+        glMatrixMode(GL_MODELVIEW);
+        glewInit();
         return true;
     }
 
@@ -130,6 +144,7 @@ namespace VisualEditor {
         LoadTextureFromFile("../Resources/close.png", &mExitBtnTexture, &tw, &th);
         mEditorController = std::make_shared<EditorController>();
         mProjectController = std::make_shared<ProjectController>();
+
     }
 
     void Window::Render() {

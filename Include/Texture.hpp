@@ -1,6 +1,6 @@
 #pragma once
+#include "pch.hpp"
 #include "stb_image.h"
-#include "SDL_opengl.h"
 
 static bool LoadTextureFromFile(const char* filename, GLuint* out_texture, int* out_width, int* out_height)
 {
@@ -35,3 +35,47 @@ static bool LoadTextureFromFile(const char* filename, GLuint* out_texture, int* 
 
     return true;
 }
+
+class FrameBuffer final {
+public:
+    FrameBuffer(ImVec2 textureSize) {
+        glGenFramebuffers(1, &mFrameBufferName);
+        glBindFramebuffer(GL_FRAMEBUFFER, mFrameBufferName);
+
+        glGenTextures(1, &mRenderTexture);
+        glBindTexture(GL_TEXTURE_2D, mRenderTexture);
+        glTexImage2D(GL_TEXTURE_2D, 0,GL_RGB, textureSize.x, textureSize.y, 0,GL_RGB, GL_UNSIGNED_BYTE, 0);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+        glGenRenderbuffers(1, &mDepthRenderBuff);
+        glBindRenderbuffer(GL_RENDERBUFFER, mDepthRenderBuff);
+        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, textureSize.x, textureSize.y);
+        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, mDepthRenderBuff);
+
+        glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, mRenderTexture, 0);
+        GLenum DrawBuffers[1] = {GL_COLOR_ATTACHMENT0};
+        glDrawBuffers(1, DrawBuffers);
+
+        if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+            std::cout << "Failed to create fbo\n";
+    }
+
+    void Bind(ImVec4 viewport) const {
+        glViewport(viewport.x, viewport.y, viewport.z, viewport.w);
+        glBindFramebuffer(GL_FRAMEBUFFER, mFrameBufferName);
+    }
+
+    void UnBind(ImVec4 viewport) const {
+        glViewport(viewport.x, viewport.y, viewport.z, viewport.w);
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    }
+
+    const GLuint GetTexture() const {
+        return mRenderTexture;
+    }
+private:
+    GLuint mFrameBufferName{};
+    GLuint mRenderTexture{};
+    GLuint mDepthRenderBuff{};
+};
