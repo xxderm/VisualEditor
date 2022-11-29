@@ -8,11 +8,39 @@ namespace VisualEditor::Graphics {
         Shape() = default;
         Shape(const Shape& other) = delete;
         virtual void Render() = 0;
-        virtual void OnEvent(SDL_Event *event, ImVec2 mousePos) = 0;
+        virtual void OnEvent(SDL_Event *event, ImVec2 mousePos) {
+            if (event->type == SDL_KEYDOWN)
+                if (event->key.keysym.sym == SDLK_LSHIFT)
+                    mShift = true;
+            if (event->type == SDL_KEYUP)
+                if (event->key.keysym.sym == SDLK_LSHIFT)
+                    mShift = false;
+        }
         virtual std::string GetName() const { return "Shape"; }
+        void Load(std::string projFile, uint32_t index) {
+
+        }
+        void Save(std::string projFile) {
+            nlohmann::json data;
+            std::fstream fin(projFile);
+            data = nlohmann::json::parse(fin);
+            fin.close();
+            data[std::to_string(mIndex)]["ShapeName"] = this->GetName();
+            data[std::to_string(mIndex)]["ShapeColor"]["r"] = this->GetColor().x;
+            data[std::to_string(mIndex)]["ShapeColor"]["g"] = this->GetColor().y;
+            data[std::to_string(mIndex)]["ShapeColor"]["b"] = this->GetColor().z;
+            data[std::to_string(mIndex)]["ShapeColor"]["a"] = this->GetColor().w;
+            data[std::to_string(mIndex)]["ShapePos"]["x"] = this->mPosition.x;
+            data[std::to_string(mIndex)]["ShapePos"]["y"] = this->mPosition.y;
+            std::ofstream fout(projFile);
+            auto dump = data.dump(4);
+            fout.write(dump.data(), dump.size());
+            fout.close();
+        }
         ImVec4 GetColor() const { return mColor; }
         void SetColor(ImVec4 color) { mColor = color; }
         void SetPos(ImVec2 pos) { mPosition = pos; }
+        void SetIndex(uint32_t index) { mIndex = index; }
         bool IsSelected() const { return mSelected; }
         virtual ~Shape() {}
     protected:
@@ -23,6 +51,8 @@ namespace VisualEditor::Graphics {
         bool mHovered = false;
         bool mSelected = false;
         bool mMousePressed = false;
+        bool mShift = false;
+        uint32_t mIndex = 0;
     };
 
     class GraphicUtility {

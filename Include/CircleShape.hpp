@@ -12,7 +12,6 @@ namespace VisualEditor {
             bool CheckBounds(ImVec2 pos) override;
         private:
             double mRadius = 0.2;
-            bool mShift = false;
         };
 
     }

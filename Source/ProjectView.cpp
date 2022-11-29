@@ -69,7 +69,9 @@ namespace VisualEditor {
             ImGui::Image((ImTextureID)mProjectIcon, ImVec2(60, 50));
             ImGui::SameLine();
             ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 17);
+            ImGui::PushItemWidth(70);
             ImGui::InputText("##ProjectNameText", &mProjectAddName[0], 15);
+            ImGui::PopItemWidth();
             ImGui::SameLine();
             ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 16);
             if (ImGui::ImageButton((ImTextureID)mCancelProjectAddIcon,

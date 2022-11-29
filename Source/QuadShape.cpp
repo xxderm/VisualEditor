@@ -10,13 +10,17 @@ namespace VisualEditor{
         }
 
         void QuadShape::OnEvent(SDL_Event *event, ImVec2 mousePos) {
+            Shape::OnEvent(event, mousePos);
             auto normPoint = ImVec2(mousePos.x, -mousePos.y);
             mHovered = ((normPoint.x >= mPosition.x - mSize.x / 2.) && (normPoint.x <= mPosition.x + mSize.x / 2.)) &&
                        ((normPoint.y >= mPosition.y - mSize.y / 2.) && (normPoint.y <= mPosition.y + mSize.y / 2.));
             if (event->type == SDL_MOUSEBUTTONDOWN &&
                 ((normPoint.x > -1 && normPoint.x < 1) && (normPoint.y > -1 && normPoint.y < 1))
                     ) {
-                mSelected = mHovered;
+                if (!mHovered && mShift && mSelected) {
+
+                }
+                else mSelected = mHovered;
                 mMousePressed = true;
             }
             if (event->type == SDL_MOUSEBUTTONUP)

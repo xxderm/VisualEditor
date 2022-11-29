@@ -182,7 +182,7 @@ namespace VisualEditor {
                 }
                 ImGui::Separator();
                 if (ImGui::MenuItem("Save")) {
-
+                    mEditorController->Save(mProjectTitle + ".json");
                 }
                 if (ImGui::MenuItem("Save as")) {
 

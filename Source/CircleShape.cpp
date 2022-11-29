@@ -10,13 +10,7 @@ namespace VisualEditor{
         }
 
         void CircleShape::OnEvent(SDL_Event *event, ImVec2 mousePos) {
-            if (event->type == SDL_KEYDOWN)
-                if (event->key.keysym.sym == SDLK_LSHIFT)
-                    mShift = true;
-            if (event->type == SDL_KEYUP)
-                if (event->key.keysym.sym == SDLK_LSHIFT)
-                    mShift = false;
-
+            Shape::OnEvent(event, mousePos);
             auto dist = sqrt( ((mPosition.x - mousePos.x) * (mPosition.x - mousePos.x))
                     + ((mPosition.y - -mousePos.y) * (mPosition.y - -mousePos.y)) );
             mHovered = dist <= mRadius;

@@ -10,6 +10,7 @@ namespace VisualEditor {
         }
 
         void TriangleShape::OnEvent(SDL_Event *event, ImVec2 mousePos) {
+            Shape::OnEvent(event, mousePos);
             auto pt = ImVec2(mousePos.x, -mousePos.y);
             auto topPoint = ImVec2(mPosition.x, mPosition.y - mSize);
             auto leftPoint = ImVec2(mPosition.x - mSize, mPosition.y + mSize);
@@ -26,7 +27,10 @@ namespace VisualEditor {
             if (event->type == SDL_MOUSEBUTTONDOWN &&
                 ((normPoint.x > -1 && normPoint.x < 1) && (normPoint.y > -1 && normPoint.y < 1))
                     ) {
-                mSelected = mHovered;
+                if (!mHovered && mShift && mSelected) {
+
+                }
+                else mSelected = mHovered;
                 mMousePressed = true;
             }
             if (event->type == SDL_MOUSEBUTTONUP)

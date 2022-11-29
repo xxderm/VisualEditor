@@ -12,6 +12,7 @@ namespace VisualEditor {
         EditorController(const EditorController& other) = delete;
         void Render(SDL_Window* window);
         void OnEvent(SDL_Event* event);
+        void Save(std::string project);
     private:
         EditorViewPtr mEditorView;
         std::shared_ptr<Storage<std::shared_ptr<Graphics::Shape>>> mEntities;

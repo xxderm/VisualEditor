@@ -8,11 +8,14 @@ namespace VisualEditor {
         mEditorView->OnAddShape([this](Graphics::ShapeType type) {
             mActions.push_back(std::make_shared<AddShapeCommand>(mEntities, type));
             mActions.back()->Execute();
+            mEntities->At(mEntities->GetSize() - 1)->SetIndex(mEntities->GetSize() - 1);
         });
         mEditorView->OnChangeColor([this](float r, float g, float b) {
             for (auto beg = mEntities->Begin(); beg != mEntities->End(); ++beg) {
-                if ((*beg)->IsSelected())
-                    (*beg)->SetColor(ImVec4(r, g, b, 1));
+                if ((*beg)->IsSelected()) {
+                    mActions.push_back(std::make_shared<ShapeChangeColorCommand>((*beg), ImVec4(r, g, b, 1.)));
+                    mActions.back()->Execute();
+                }
             }
         });
     }
@@ -35,6 +38,18 @@ namespace VisualEditor {
         auto ny = (float)((float)-pos.y / sceneSize.y) * 2.f + 1.f;
         for (auto beg = mEntities->Begin(); beg != mEntities->End(); ++beg) {
             (*beg)->OnEvent(event, ImVec2(nx, ny));
+        }
+    }
+
+    void EditorController::Save(std::string project) {
+        nlohmann::json data;
+        data["EntityCount"] = mEntities->GetSize();
+        std::ofstream f(project);
+        auto dump = data.dump(4);
+        f.write(dump.data(), dump.size());
+        f.close();
+        for (auto beg = mEntities->Begin(); beg != mEntities->End(); ++beg) {
+            (*beg)->Save(project);
         }
     }
 
