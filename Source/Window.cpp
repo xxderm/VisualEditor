@@ -138,11 +138,11 @@ namespace VisualEditor {
     }
 
     Window::Window() {
-        if (!this->Initialize("Редактор", ImVec2(1400, 800)))
+        if (!this->Initialize("Редактор", ImVec2(950, 800)))
             std::cout << "Failed to initialize window" << std::endl;
         int tw, th;
         LoadTextureFromFile("../Resources/close.png", &mExitBtnTexture, &tw, &th);
-        mEditorController = std::make_shared<EditorController>();
+        mEditorController = std::make_shared<EditorController>(mWindow);
         mProjectController = std::make_shared<ProjectController>();
 
     }
