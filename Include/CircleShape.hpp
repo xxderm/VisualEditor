@@ -7,7 +7,6 @@ namespace VisualEditor::Graphics {
         void Render() override;
         std::string GetName() const override { return "CircleShape"; }
         bool IsMouseHover(ImVec2 mousePos) override;
-    protected:
         Quad GetBounds(ImVec2 pos) override;
     private:
         double mRadius = 0.2;

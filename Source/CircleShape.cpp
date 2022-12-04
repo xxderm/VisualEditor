@@ -5,8 +5,11 @@ namespace VisualEditor{
 
         void CircleShape::Render() {
             GraphicUtility::CircleEdge(mPosition, mRadius, mColor);
-            if (mHovered || mSelected)
-                GraphicUtility::CircleEdge(mPosition, mRadius + 0.01);
+            if (mHovered)
+                GraphicUtility::CircleEdge(mPosition, mRadius + 0.005, ImVec4(1, 1, 0.6, 1));
+            if (mSelected)
+                GraphicUtility::Grid(mPosition, mRadius * 2.015);
+
         }
 
         Quad CircleShape::GetBounds(ImVec2 pos) {

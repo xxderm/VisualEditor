@@ -16,18 +16,19 @@ namespace VisualEditor::Graphics {
         Shape(const Shape& other) = delete;
         virtual void Render() = 0;
         void OnEvent(SDL_Event *event, ImVec2 mousePos);
-        virtual std::string GetName() const { return "Shape"; }
         virtual bool IsMouseHover(ImVec2 mousePos) = 0;
         virtual void Load(std::string projFile, uint32_t index) {}
         virtual void Save(std::string projFile, uint32_t index) {}
-        ImVec4 GetColor() const { return mColor; }
         void SetColor(ImVec4 color) { mColor = color; }
         void SetPos(ImVec2 pos) { mPosition = pos; }
+        virtual std::string GetName() const { return "Shape"; }
+        ImVec2 GetPosition() const { return mPosition; }
+        ImVec4 GetColor() const { return mColor; }
         bool IsSelected() const { return mSelected; }
         virtual ~Shape() = default;
+        virtual Quad GetBounds(ImVec2 pos) = 0;
     protected:
         bool CheckBounds(ImVec2 pos);
-        virtual Quad GetBounds(ImVec2 pos) = 0;
     protected:
         ImVec2 mPosition = ImVec2(0, 0);
         ImVec4 mColor = ImVec4(1, 1, 1, 1);
@@ -82,6 +83,18 @@ namespace VisualEditor::Graphics {
             glVertex2f(point1.x, point1.y);
             glVertex2f(point2.x, point2.y);
             glEnd();
+        }
+        static void Grid(ImVec2 pos, double size) {
+            glLineWidth(3);
+            glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+            glColor3f(1, 1, 0.6);
+            glBegin(GL_QUADS);
+            glVertex2f(pos.x - size / 2., pos.y + size / 2.);
+            glVertex2f(pos.x + size / 2., pos.y + size / 2.);
+            glVertex2f(pos.x + size / 2., pos.y - size / 2.);
+            glVertex2f(pos.x - size / 2., pos.y - size / 2.);
+            glEnd();
+            glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
         }
     };
 
