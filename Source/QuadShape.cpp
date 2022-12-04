@@ -31,17 +31,13 @@ namespace VisualEditor{
             }
         }
 
-        bool QuadShape::CheckBounds(ImVec2 pos) {
-            auto nsize = ImVec2(mSize.x + 0.01, mSize.y + 0.01);
-            if (pos.x + nsize.x / 2 > 1)
-                return true;
-            if (pos.x - nsize.x / 2 < -1)
-                return true;
-            if (pos.y + nsize.y / 2 > 1)
-                return true;
-            if (pos.y - nsize.y / 2 < -1)
-                return true;
-            return false;
+        Quad QuadShape::GetBounds(ImVec2 pos) {
+            Quad quad;
+            quad.TopLeft = ImVec2(pos.x - (mSize.x / 2. + 0.01), (pos.y + (mSize.y / 2. + 0.01)));
+            quad.TopRight = ImVec2(pos.x + (mSize.x / 2. + 0.01), (pos.y + (mSize.y / 2. + 0.01)));
+            quad.BtmLeft = ImVec2(pos.x - (mSize.x / 2. + 0.01), (pos.y - (mSize.y / 2. + 0.01)));
+            quad.BtmRight = ImVec2(pos.x + (mSize.x / 2. + 0.01), (pos.y - (mSize.y / 2. + 0.01)));
+            return quad;
         }
 
     }

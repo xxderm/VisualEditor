@@ -7,10 +7,10 @@ namespace VisualEditor::Graphics {
     public:
         void Add(std::shared_ptr<Shape> shape);
         void Render() override;
-        void OnEvent(SDL_Event *event, ImVec2 mousePos) override {}
+        void OnEvent(SDL_Event *event, ImVec2 mousePos) override { }
         std::string GetName() const override { return "GroupShape"; }
     protected:
-        bool CheckBounds(ImVec2 pos) override{}
+        Quad GetBounds(ImVec2 pos) override{ return Quad();}
     private:
         Storage<std::shared_ptr<Shape>> mEntities;
     };

@@ -8,7 +8,6 @@ namespace VisualEditor {
         mEditorView->OnAddShape([this](Graphics::ShapeType type) {
             mActions.push_back(std::make_shared<AddShapeCommand>(mEntities, type));
             mActions.back()->Execute();
-            mEntities->At(mEntities->GetSize() - 1)->SetIndex(mEntities->GetSize() - 1);
         });
         mEditorView->OnChangeColor([this](float r, float g, float b) {
             for (auto beg = mEntities->Begin(); beg != mEntities->End(); ++beg) {
@@ -48,9 +47,6 @@ namespace VisualEditor {
         auto dump = data.dump(4);
         f.write(dump.data(), dump.size());
         f.close();
-        for (auto beg = mEntities->Begin(); beg != mEntities->End(); ++beg) {
-            (*beg)->Save(project);
-        }
     }
 
 }

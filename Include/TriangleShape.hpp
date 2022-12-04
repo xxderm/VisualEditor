@@ -9,7 +9,7 @@ namespace VisualEditor {
             void OnEvent(SDL_Event *event, ImVec2 mousePos) override;
             std::string GetName() const override { return "TriangleShape"; }
         protected:
-            bool CheckBounds(ImVec2 pos) override;
+            Quad GetBounds(ImVec2 pos) override;
         private:
             float Sign(ImVec2 p1, ImVec2 p2, ImVec2 p3);
         private:

@@ -41,12 +41,17 @@ namespace VisualEditor {
             }
         }
 
-        bool TriangleShape::CheckBounds(ImVec2 pos) {
-            return false;
-        }
-
         float TriangleShape::Sign(ImVec2 p1, ImVec2 p2, ImVec2 p3) {
             return (p1.x - p3.x) * (p2.y - p3.y) - (p2.x - p3.x) * (p1.y - p3.y);
+        }
+
+        Quad TriangleShape::GetBounds(ImVec2 pos) {
+            Quad quad;
+            quad.TopLeft = ImVec2(pos.x - (mSize + 0.01), (pos.y + (mSize + 0.01)));
+            quad.TopRight = ImVec2(pos.x + (mSize + 0.01), (pos.y + (mSize + 0.01)));
+            quad.BtmLeft = ImVec2(pos.x - (mSize + 0.01), (pos.y - (mSize + 0.01)));
+            quad.BtmRight = ImVec2(pos.x + (mSize + 0.01), (pos.y - (mSize + 0.01)));
+            return quad;
         }
 
     }

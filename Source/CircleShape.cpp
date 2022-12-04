@@ -27,20 +27,22 @@ namespace VisualEditor{
             if (event->type == SDL_MOUSEBUTTONUP)
                 mMousePressed = false;
             if (event->type == SDL_MOUSEMOTION) {
-                if (mMousePressed && mHovered && !CheckBounds(ImVec2(mousePos.x, -mousePos.y)))
+                if (mMousePressed && mHovered && !CheckBounds(ImVec2(mousePos.x, -mousePos.y)) )
                     mPosition = ImVec2(mousePos.x, -mousePos.y);
             }
         }
 
-        bool CircleShape::CheckBounds(ImVec2 pos) {
-            auto rad = (mRadius + 0.01);
-            if ((pos.y +  rad) > 1)
-                return true;
-            if ((pos.y - rad) < -1)
-                return true;
-            if ((pos.x + rad) > 1)
-                return true;
-            return (pos.x - rad) < -1;
+        Quad CircleShape::GetBounds(ImVec2 pos) {
+            Quad quad;
+            quad.TopLeft = ImVec2(pos.x - (mRadius + 0.01), pos.y + (mRadius + 0.01));
+            quad.TopRight = ImVec2(pos.x + (mRadius + 0.01), pos.y + (mRadius + 0.01));
+            quad.BtmLeft = ImVec2(pos.x - (mRadius + 0.01), pos.y - (mRadius + 0.01));
+            quad.BtmRight = ImVec2(pos.x + (mRadius + 0.01), pos.y - (mRadius + 0.01));
+            return quad;
+        }
+
+        const bool CircleShape::IsMouseHover(ImVec2 mousePos) const {
+            return 0;
         }
 
     }

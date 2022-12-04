@@ -3,48 +3,31 @@
 
 namespace VisualEditor::Graphics {
 
+    struct Quad {
+        ImVec2 TopLeft{};
+        ImVec2 TopRight{};
+        ImVec2 BtmLeft{};
+        ImVec2 BtmRight{};
+    };
+
     class Shape {
     public:
         Shape() = default;
         Shape(const Shape& other) = delete;
         virtual void Render() = 0;
-        virtual void OnEvent(SDL_Event *event, ImVec2 mousePos) {
-            if (event->type == SDL_KEYDOWN)
-                if (event->key.keysym.sym == SDLK_LSHIFT)
-                    mShift = true;
-            if (event->type == SDL_KEYUP)
-                if (event->key.keysym.sym == SDLK_LSHIFT)
-                    mShift = false;
-        }
+        virtual void OnEvent(SDL_Event *event, ImVec2 mousePos);
         virtual std::string GetName() const { return "Shape"; }
-        void Load(std::string projFile, uint32_t index) {
-
-        }
-        void Save(std::string projFile) {
-            nlohmann::json data;
-            std::fstream fin(projFile);
-            data = nlohmann::json::parse(fin);
-            fin.close();
-            data[std::to_string(mIndex)]["ShapeName"] = this->GetName();
-            data[std::to_string(mIndex)]["ShapeColor"]["r"] = this->GetColor().x;
-            data[std::to_string(mIndex)]["ShapeColor"]["g"] = this->GetColor().y;
-            data[std::to_string(mIndex)]["ShapeColor"]["b"] = this->GetColor().z;
-            data[std::to_string(mIndex)]["ShapeColor"]["a"] = this->GetColor().w;
-            data[std::to_string(mIndex)]["ShapePos"]["x"] = this->mPosition.x;
-            data[std::to_string(mIndex)]["ShapePos"]["y"] = this->mPosition.y;
-            std::ofstream fout(projFile);
-            auto dump = data.dump(4);
-            fout.write(dump.data(), dump.size());
-            fout.close();
-        }
+        virtual const bool IsMouseHover(ImVec2 mousePos) const = 0;
+        virtual void Load(std::string projFile, uint32_t index) {}
+        virtual void Save(std::string projFile, uint32_t index) {}
         ImVec4 GetColor() const { return mColor; }
         void SetColor(ImVec4 color) { mColor = color; }
         void SetPos(ImVec2 pos) { mPosition = pos; }
-        void SetIndex(uint32_t index) { mIndex = index; }
         bool IsSelected() const { return mSelected; }
-        virtual ~Shape() {}
+        virtual ~Shape() = default;
     protected:
-        virtual bool CheckBounds(ImVec2 pos) = 0;
+        bool CheckBounds(ImVec2 pos);
+        virtual Quad GetBounds(ImVec2 pos) = 0;
     protected:
         ImVec2 mPosition = ImVec2(0, 0);
         ImVec4 mColor = ImVec4(1, 1, 1, 1);
@@ -52,10 +35,9 @@ namespace VisualEditor::Graphics {
         bool mSelected = false;
         bool mMousePressed = false;
         bool mShift = false;
-        uint32_t mIndex = 0;
     };
 
-    class GraphicUtility {
+    class GraphicUtility final {
     public:
         static void QuadEdge(ImVec2 point, ImVec2 size, ImVec4 color = ImVec4(1, 0, 0, 1)) {
             auto topLeftPoint = ImVec2(point.x - size.x / 2., point.y + size.y / 2);
