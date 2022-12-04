@@ -24,5 +24,25 @@ namespace VisualEditor::Graphics {
         if (event->type == SDL_KEYUP)
             if (event->key.keysym.sym == SDLK_LSHIFT)
                 mShift = false;
+        mHovered = IsMouseHover(mousePos);
+        if (event->type == SDL_MOUSEBUTTONDOWN &&
+            ((mousePos.x > -1 && mousePos.x < 1) && (mousePos.y > -1 && mousePos.y < 1))
+                ) {
+            if ( !(!mHovered && mShift && mSelected) )
+                mSelected = mHovered;
+            mMousePressed = true;
+            if (mHovered)
+                mDeltaDiff = ImVec2(mPosition.x - mousePos.x, mPosition.y - mousePos.y);
+        }
+        if (event->type == SDL_MOUSEBUTTONUP) {
+            mMousePressed = false;
+            mDeltaDiff = {};
+        }
+        if (event->type == SDL_MOUSEMOTION) {
+            auto normalizePosition = ImVec2(mousePos.x + mDeltaDiff.x, mousePos.y + mDeltaDiff.y);
+            if (mMousePressed && mHovered && !CheckBounds(normalizePosition) ) {
+                mPosition = normalizePosition;
+            }
+        }
     }
 }

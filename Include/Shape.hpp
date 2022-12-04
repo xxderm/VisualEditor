@@ -15,9 +15,9 @@ namespace VisualEditor::Graphics {
         Shape() = default;
         Shape(const Shape& other) = delete;
         virtual void Render() = 0;
-        virtual void OnEvent(SDL_Event *event, ImVec2 mousePos);
+        void OnEvent(SDL_Event *event, ImVec2 mousePos);
         virtual std::string GetName() const { return "Shape"; }
-        virtual const bool IsMouseHover(ImVec2 mousePos) const = 0;
+        virtual bool IsMouseHover(ImVec2 mousePos) = 0;
         virtual void Load(std::string projFile, uint32_t index) {}
         virtual void Save(std::string projFile, uint32_t index) {}
         ImVec4 GetColor() const { return mColor; }
@@ -35,6 +35,7 @@ namespace VisualEditor::Graphics {
         bool mSelected = false;
         bool mMousePressed = false;
         bool mShift = false;
+        ImVec2 mDeltaDiff{};
     };
 
     class GraphicUtility final {
@@ -74,8 +75,8 @@ namespace VisualEditor::Graphics {
             glVertex2f(rightPoint.x, rightPoint.y);
             glEnd();
         }
-        static void LineEdge(ImVec2 point1, ImVec2 point2, ImVec4 color = ImVec4(1, 0, 0, 1)) {
-            glLineWidth(10);
+        static void LineEdge(ImVec2 point1, ImVec2 point2, ImVec4 color = ImVec4(1, 0, 0, 1), uint32_t lineSize = 10) {
+            glLineWidth(lineSize);
             glColor3f(color.x, color.y, color.z);
             glBegin(GL_LINES);
             glVertex2f(point1.x, point1.y);

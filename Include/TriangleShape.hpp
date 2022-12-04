@@ -6,7 +6,7 @@ namespace VisualEditor {
         class TriangleShape final : public Shape {
         public:
             void Render() override;
-            void OnEvent(SDL_Event *event, ImVec2 mousePos) override;
+            bool IsMouseHover(ImVec2 mousePos) override;
             std::string GetName() const override { return "TriangleShape"; }
         protected:
             Quad GetBounds(ImVec2 pos) override;

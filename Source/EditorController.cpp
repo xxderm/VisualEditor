@@ -36,7 +36,7 @@ namespace VisualEditor {
         auto nx = (float)((float)pos.x / sceneSize.x) * 2.f - 1.f;
         auto ny = (float)((float)-pos.y / sceneSize.y) * 2.f + 1.f;
         for (auto beg = mEntities->Begin(); beg != mEntities->End(); ++beg) {
-            (*beg)->OnEvent(event, ImVec2(nx, ny));
+            (*beg)->OnEvent(event, ImVec2(nx, -ny));
         }
     }
 
