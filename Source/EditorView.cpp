@@ -28,7 +28,10 @@ namespace VisualEditor {
         ImGui::SetNextWindowSize(ImVec2(mScrWidth * 0.2, mScrHeight * 0.25));
         ImGui::Begin("Objects", 0,
                      ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoBringToFrontOnFocus);
-        // TODO: for each entity, create selectable table
+        for (auto beg = mEntities->Begin(); beg != mEntities->End(); ++beg) {
+            auto name = (*beg)->GetName();
+            ImGui::Selectable(name.c_str());
+        }
         ImGui::End();
     }
 
@@ -139,7 +142,7 @@ namespace VisualEditor {
         ImGui::PushItemWidth(150);
         if (ImGui::BeginPopupContextItem("##SceneContextMenu")) {
             if (ImGui::MenuItem("Group", "Selected entities")) {
-
+                mOnMakeGroup();
             }
             if (ImGui::MenuItem("Undo", "Last action")) {
 
@@ -171,6 +174,10 @@ namespace VisualEditor {
 
     void EditorView::OnChangeColor(const std::function<void(float, float, float)> &fn) {
         mOnChangeColorCallBack = fn;
+    }
+
+    void EditorView::OnMakeGroup(const std::function<void()> &fn) {
+        mOnMakeGroup = fn;
     }
 
 }

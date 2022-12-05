@@ -12,7 +12,7 @@ namespace VisualEditor {
         private:
             float Sign(ImVec2 p1, ImVec2 p2, ImVec2 p3);
         private:
-            double mSize = 0.4;
+            double mSize = 0.2;
         };
 
     }

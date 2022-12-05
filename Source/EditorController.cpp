@@ -17,6 +17,18 @@ namespace VisualEditor {
                 }
             }
         });
+        mEditorView->OnMakeGroup([this]() {
+            auto groupEntity = Graphics::ShapeFactory::CreateShape(Graphics::ShapeType::GROUP);
+            uint32_t index = 0;
+            for (auto beg = mEntities->Begin(); beg != mEntities->End(); ++beg) {
+                if ((*beg)->IsSelected()) {
+                    dynamic_cast<Graphics::GroupShape*>(groupEntity.get())->Add((*beg));
+                    mEntities->Pop(index);
+                }
+                ++index;
+            }
+            mEntities->Push(groupEntity);
+        });
     }
 
     void EditorController::Render(SDL_Window* window) {
