@@ -94,7 +94,7 @@ namespace VisualEditor {
         ImGui::SetNextWindowSize(ImVec2(mScrWidth * 0.2, mScrHeight * 0.3));
         ImGui::Begin("Settings", 0,
                      ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoBringToFrontOnFocus);
-        if (ImGui::ColorPicker3("ColorPick", mColor)) {
+        if (ImGui::ColorPicker3("##ColorPick", mColor)) {
             mOnChangeColorCallBack(mColor[0], mColor[1], mColor[2]);
         }
         ImGui::End();
@@ -126,6 +126,7 @@ namespace VisualEditor {
         ImGui::SetNextWindowSize(sceneSize);
         ImGui::Begin("Scene", 0,
                 ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoBringToFrontOnFocus);
+        // Рендер в буффер
         mFrame->Bind(ImVec4(0, 0, 2000, 2000));
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         for (auto beg = mEntities->Begin(); beg != mEntities->End(); ++beg)
@@ -135,6 +136,24 @@ namespace VisualEditor {
         ImGui::Image((void*)mFrame->GetTexture(), avail_size);
         mScenePos = ImGui::GetItemRectMin();
         mFrame->UnBind(ImVec4(0, 0, 2000, 2000));
+        ImGui::PushItemWidth(150);
+        if (ImGui::BeginPopupContextItem("##SceneContextMenu")) {
+            if (ImGui::MenuItem("Group", "Selected entities")) {
+
+            }
+            if (ImGui::MenuItem("Undo", "Last action")) {
+
+            }
+            if (ImGui::MenuItem("Redo", "Last action")) {
+
+            }
+            ImGui::Separator();
+            if (ImGui::MenuItem("Delete", "Selected entities")) {
+
+            }
+            ImGui::EndPopup();
+        }
+        ImGui::PopItemWidth();
         ImGui::End();
     }
 

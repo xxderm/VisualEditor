@@ -16,6 +16,7 @@ namespace VisualEditor::Graphics {
         Shape(const Shape& other) = delete;
         virtual void Render() = 0;
         void OnEvent(SDL_Event *event, ImVec2 mousePos);
+        void Move(ImVec2 delta);
         virtual bool IsMouseHover(ImVec2 mousePos) = 0;
         virtual void Load(std::string projFile, uint32_t index) {}
         virtual void Save(std::string projFile, uint32_t index) {}

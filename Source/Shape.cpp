@@ -18,6 +18,10 @@ namespace VisualEditor::Graphics {
     }
 
     void Shape::OnEvent(SDL_Event *event, ImVec2 mousePos) {
+        if (event->type == SDL_MOUSEBUTTONDOWN || event->type == SDL_MOUSEBUTTONUP) {
+            if (event->button.button == SDL_BUTTON_RIGHT)
+                return;
+        }
         if (event->type == SDL_KEYDOWN)
             if (event->key.keysym.sym == SDLK_LSHIFT)
                 mShift = true;
@@ -41,8 +45,13 @@ namespace VisualEditor::Graphics {
         if (event->type == SDL_MOUSEMOTION) {
             auto normalizePosition = ImVec2(mousePos.x + mDeltaDiff.x, mousePos.y + mDeltaDiff.y);
             if (mMousePressed && mHovered && !CheckBounds(normalizePosition) ) {
-                mPosition = normalizePosition;
+                //mPosition = normalizePosition;
+                this->Move(normalizePosition);
             }
         }
+    }
+
+    void Shape::Move(ImVec2 delta) {
+        mPosition = delta;
     }
 }

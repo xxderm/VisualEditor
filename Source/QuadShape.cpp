@@ -6,7 +6,7 @@ namespace VisualEditor{
         void QuadShape::Render() {
             GraphicUtility::QuadEdge(mPosition, mSize, mColor);
             if (mHovered || mSelected)
-                GraphicUtility::QuadEdge(mPosition, ImVec2(mSize.x + 0.015, mSize.y + 0.015));
+                GraphicUtility::QuadEdge(mPosition, ImVec2(mSize.x + 0.015, mSize.y + 0.015), ImVec4(1, 1, 0.6, 1));
         }
 
         Quad QuadShape::GetBounds(ImVec2 pos) {

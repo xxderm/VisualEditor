@@ -5,8 +5,10 @@ namespace VisualEditor {
 
         void TriangleShape::Render() {
             GraphicUtility::TriangleEdge(mPosition, mSize, mColor);
-            if (mHovered || mSelected)
-                GraphicUtility::TriangleEdge(mPosition, mSize + 0.01);
+            if (mHovered)
+                GraphicUtility::TriangleEdge(mPosition, mSize + 0.01, ImVec4(1, 1, 0.6, 1));
+            if (mSelected)
+                GraphicUtility::Grid(mPosition, mSize * 2.02);
         }
 
         float TriangleShape::Sign(ImVec2 p1, ImVec2 p2, ImVec2 p3) {
