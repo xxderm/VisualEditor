@@ -8,7 +8,7 @@ namespace VisualEditor::Graphics {
         std::string GetName() const override { return "CircleShape"; }
         bool IsMouseHover(ImVec2 mousePos) override;
         Quad GetBounds(ImVec2 pos) override;
-        std::shared_ptr<Shape> Copy() override;
+        Shape* Copy() override;
     private:
         double mRadius = 0.2;
     };

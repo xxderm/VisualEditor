@@ -2,158 +2,85 @@
 #include "pch.hpp"
 
 namespace VisualEditor {
+
     template<class T>
     class Storage final {
     public:
-        struct Iterator final {
-            using IterCat = std::forward_iterator_tag;
-            using DiffType = std::ptrdiff_t;
-            using ValueType = T;
-            using Ptr = T*;
-            using Ref = T&;
-
-            Iterator(Ptr other) : mPtr(other) {}
-
-            Ref operator*() const { return *mPtr; }
-
-            Ptr operator->() { return mPtr; }
-
-            Iterator& operator++() {
-                mPtr++;
-                return *this;
-            }
-
-            Iterator operator++(int) {
-                Iterator temp = *this;
-                ++(*this);
-                return temp;
-            }
-
-            friend bool operator==(const Iterator& lhs, const Iterator& rhs) {
-                return lhs.mPtr == rhs.mPtr;
-            }
-
-            friend bool operator!=(const Iterator& lhs, const Iterator& rhs) {
-                return lhs.mPtr != rhs.mPtr;
-            }
-        private:
-            Ptr mPtr;
-        };
-
-        Iterator Begin() {
-            return Iterator(&mValue[0]);
+        Storage() {
+            mData = new T[1];
+            mCapacity = 1;
         }
-
-        Iterator End() {
-            return Iterator(&mValue[mSize]);
+        Storage(Storage& other) {
+            if (this != &other) {
+                delete mData;
+                mData = new T[other.mCapacity];
+                for (uint32_t i = 0; i < other.Size(); ++i)
+                    mData[i] = other.mData[i];
+                mCurrent = other.mCurrent;
+                mCapacity = other.mCapacity;
+            }
         }
-
-        Storage<T>& operator=(const Storage<T>& other);
-
-        T& operator[](const uint32_t index) { return mValue[index]; }
-
-        T& At(const uint32_t index) { return mValue[index]; }
-
-        Storage() = default;
-
-        Storage(uint32_t capacity);
-
-        Storage(const Storage<T>& other);
-
-        void Clean();
-
-        void Push(const T& value);
-
-        void Pop(const uint32_t& index);
-
-        void Pop(const uint32_t& begin, const uint32_t& end);
-
-        uint32_t GetSize() const noexcept { return mSize; }
-
-        uint32_t GetCapacity() const noexcept { return mCapacity; }
-
-        ~Storage();
+        Storage(Storage&& other) {
+            if (this != &other) {
+                delete[] mData;
+                mData = other.mData;
+                mCurrent = other.mCurrent;
+                mCapacity = other.mCapacity;
+                other.mData = nullptr;
+                other.mCurrent = other.mCapacity = 0;
+            }
+        }
+        ~Storage() { delete[] mData; }
+        Storage& operator=(Storage& other) {
+            if (this != &other) {
+                delete[] mData;
+                mData = new T[other.mCapacity];
+                for (uint32_t i = 0; i < other.Size(); ++i)
+                    mData[i] = other.mData[i];
+                mCurrent = other.mCurrent;
+                mCapacity = other.mCapacity;
+            }
+            return *this;
+        }
+        Storage& operator=(Storage&& other) noexcept {
+            if (this != &other) {
+                delete[] mData;
+                mData = other.mData;
+                mCurrent = other.mCurrent;
+                mCapacity = other.mCapacity;
+                other.mData = nullptr;
+                other.mCurrent = other.mCapacity = 0;
+            }
+            return *this;
+        }
+        void Push(const T& value) {
+            if (mCurrent >= mCapacity) Expand();
+            mData[mCurrent++] = value;
+        }
+        void Remove(uint32_t index) {
+            for (uint32_t i = index + 1; i < mCurrent; ++i)
+                mData[i - 1] = mData[i];
+            --mCurrent;
+        }
+        T& Back() const { return mData[mCurrent - 1]; }
+        T& operator[](uint32_t index) { return mData[index]; }
+        const T& operator[](uint32_t index) const { return mData[index]; }
+        bool Empty() const { return mCurrent == 0; }
+        uint32_t Size() const noexcept { return mCurrent; }
+        uint32_t Capacity() const noexcept { return mCapacityMemory; }
     private:
-        void Realloc();
+        void Expand() {
+            mCapacity *= 2;
+            T* tmp = mData;
+            mData = new T[mCapacity];
+            for (uint32_t i = 0; i < mCurrent; ++i)
+                mData[i] = tmp[i];
+            delete[] tmp;
+        }
     private:
-        T* mValue = nullptr;
-        uint32_t mSize = 0;
-        uint32_t mCapacity = 0;
+        T* mData = nullptr;
+        uint32_t mCapacity{};
+        uint32_t mCurrent{};
     };
 
-    template<class T>
-    Storage<T>::Storage(uint32_t capacity) {
-        mValue = new T[capacity];
-        mCapacity = capacity;
-    }
-
-    template<class T>
-    Storage<T>::Storage(const Storage<T> &other) {
-        *this = other;
-    }
-
-    template<class T>
-    void Storage<T>::Push(const T &value) {
-        if (mSize >= mCapacity)
-            Realloc();
-        mValue[mSize] = value;
-        ++mSize;
-    }
-
-    template<class T>
-    void Storage<T>::Pop(const uint32_t &index) {
-        if (mSize != 0) {
-            Storage<T> temp(mSize - 1);
-            for (uint32_t i = 0; i < mSize; ++i) {
-                if (i == index) continue;
-                temp.Push(mValue[i]);
-            }
-            *this = temp;
-        }
-    }
-
-    template<class T>
-    Storage<T>::~Storage() {
-        this->Clean();
-    }
-
-    template<class T>
-    void Storage<T>::Clean() {
-        if (nullptr != mValue) {
-            delete[] mValue;
-            mValue = nullptr;
-        }
-        mSize = 0;
-        mCapacity = 0;
-    }
-
-    template<class T>
-    void Storage<T>::Realloc() {
-        ++mCapacity;
-        auto oldValues = new T[mCapacity];
-        const auto oldSize = this->mSize;
-        const auto byteSize = sizeof(T) * mSize;
-        memcpy_s(oldValues, byteSize, mValue, byteSize);
-        *this = Storage(mCapacity);
-        mSize = oldSize;
-        memcpy_s(mValue, byteSize, oldValues, byteSize);
-        delete[] oldValues;
-    }
-
-    template<class T>
-    Storage<T> &Storage<T>::operator=(const Storage<T> &other) {
-        this->Clean();
-        mSize = other.mSize;
-        mCapacity = other.mCapacity;
-        mValue = new T[mCapacity];
-        const auto& byteSize = sizeof(T) * mSize;
-        memcpy_s(mValue, byteSize, other.mValue, byteSize);
-        return *this;
-    }
-
-    template<class T>
-    void Storage<T>::Pop(const uint32_t &begin, const uint32_t &end) {
-        for (uint32_t i = begin; i < end; ++i)
-            this->Pop(i);
-    }
 }

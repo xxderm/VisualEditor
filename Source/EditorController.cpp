@@ -3,33 +3,32 @@
 namespace VisualEditor {
 
     EditorController::EditorController(SDL_Window* window) {
-        mEntities = std::make_shared<Storage<std::shared_ptr<Graphics::Shape>>>(100);
+        mEntities = std::make_shared<Storage<std::shared_ptr<Graphics::Shape>>>();
         mEditorView = std::make_shared<EditorView>(window);
         mEditorView->OnAddShape([this](Graphics::ShapeType type) {
             mActions.push_back(std::make_shared<AddShapeCommand>(mEntities, type));
             mActions.back()->Execute();
         });
         mEditorView->OnChangeColor([this](float r, float g, float b) {
-            for (auto beg = mEntities->Begin(); beg != mEntities->End(); ++beg) {
-                if ((*beg)->IsSelected()) {
-                    mActions.push_back(std::make_shared<ShapeChangeColorCommand>((*beg), ImVec4(r, g, b, 1.)));
+            for (uint32_t i = 0; i < mEntities->Size(); i++) {
+                if ((*mEntities)[i]->IsSelected()) {
+                    mActions.push_back(std::make_shared<ShapeChangeColorCommand>((*mEntities)[i], ImVec4(r, g, b, 1.)));
                     mActions.back()->Execute();
                 }
             }
         });
         mEditorView->OnMakeGroup([this]() {
-            auto groupEntity = Graphics::ShapeFactory::CreateShape(Graphics::ShapeType::GROUP);
-            uint32_t index = 0;
-            for (auto beg = mEntities->Begin(); beg != mEntities->End(); ++beg) {
-                if ((*beg)->IsSelected()) {
-                    ((Graphics::GroupShape*)groupEntity.get())->Add(beg->get()->Copy());
-                    mIndicesToErase.push_back(index);
-                    mEntities->Pop(index);
-                    // TODO:
+            auto gs = Graphics::ShapeFactory::CreateShape(Graphics::ShapeType::GROUP);
+            for (uint32_t i = 0; i < mEntities->Size(); i++) {
+                if ((*mEntities)[i]->IsSelected()) {
+                    ((Graphics::GroupShape*)gs.get())->Add((*mEntities)[i]->Copy());
+                    mIndicesToErase.push_back(i);
                 }
-                ++index;
             }
-            mEntities->Push(groupEntity);
+            for (auto ind : mIndicesToErase)
+                mEntities->Remove(ind);
+            mIndicesToErase.clear();
+            mEntities->Push(gs);
         });
     }
 
@@ -49,14 +48,15 @@ namespace VisualEditor {
         auto pos = ImVec2(event->motion.x - scenePos.x, event->motion.y - scenePos.y);
         auto nx = (float)((float)pos.x / sceneSize.x) * 2.f - 1.f;
         auto ny = (float)((float)-pos.y / sceneSize.y) * 2.f + 1.f;
-        for (auto beg = mEntities->Begin(); beg != mEntities->End(); ++beg) {
-            (*beg)->OnEvent(event, ImVec2(nx, -ny));
+        for (uint32_t i = 0; i < mEntities->Size(); i++) {
+            (*mEntities)[i]->OnEvent(event, ImVec2(nx, -ny));
         }
+
     }
 
     void EditorController::Save(std::string project) {
         nlohmann::json data;
-        data["EntityCount"] = mEntities->GetSize();
+        data["EntityCount"] = mEntities->Size();
         std::ofstream f(project);
         auto dump = data.dump(4);
         f.write(dump.data(), dump.size());

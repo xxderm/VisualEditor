@@ -33,7 +33,7 @@ namespace VisualEditor {
     }
 
     void AddShapeCommand::Undo() {
-        mStorage->Pop(mIndexShape);
+        mStorage->Remove(mIndexShape);
     }
 
     void AddShapeCommand::Redo() {
@@ -42,7 +42,7 @@ namespace VisualEditor {
 
     void AddShapeCommand::Push() {
         mStorage->Push(Graphics::ShapeFactory::CreateShape(mType));
-        mIndexShape = mStorage->GetSize();
+        mIndexShape = mStorage->Size();
     }
 
     ShapeMoveCommand::ShapeMoveCommand(const std::shared_ptr<Graphics::Shape> &shape, ImVec2 oldPos, ImVec2 newPos) {

@@ -28,8 +28,8 @@ namespace VisualEditor {
         ImGui::SetNextWindowSize(ImVec2(mScrWidth * 0.2, mScrHeight * 0.25));
         ImGui::Begin("Objects", 0,
                      ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoBringToFrontOnFocus);
-        for (auto beg = mEntities->Begin(); beg != mEntities->End(); ++beg) {
-            auto name = (*beg)->GetName();
+        for (uint32_t i = 0; i < mEntities->Size(); i++) {
+            auto name = (*mEntities)[i]->GetName();
             ImGui::Selectable(name.c_str());
         }
         ImGui::End();
@@ -132,8 +132,8 @@ namespace VisualEditor {
         // Рендер в буффер
         mFrame->Bind(ImVec4(0, 0, 2000, 2000));
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        for (auto beg = mEntities->Begin(); beg != mEntities->End(); ++beg)
-            (*beg)->Render();
+        for (uint32_t i = 0; i < mEntities->Size(); i++)
+            (*mEntities)[i]->Render();
         ImVec2 avail_size = ImGui::GetContentRegionAvail();
         mSceneSize = avail_size;
         ImGui::Image((void*)mFrame->GetTexture(), avail_size);

@@ -9,7 +9,7 @@ namespace VisualEditor {
             bool IsMouseHover(ImVec2 mousePos) override;
             std::string GetName() const override { return "TriangleShape"; }
             Quad GetBounds(ImVec2 pos) override;
-            std::shared_ptr<Shape> Copy() override;
+            Shape* Copy() override;
         private:
             float Sign(ImVec2 p1, ImVec2 p2, ImVec2 p3);
         private:
