@@ -121,4 +121,11 @@ namespace VisualEditor::Graphics {
         }
     }
 
+    GroupShape::GroupShape(const GroupShape& other)  : Shape(other) {
+        this->mSize = other.mSize;
+        for (uint32_t i = 0; i < other.mEntities.Size(); ++i) {
+            mEntities.Push(mEntities[i]);
+        }
+    }
+
 }

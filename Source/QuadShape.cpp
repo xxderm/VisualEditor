@@ -57,5 +57,9 @@ namespace VisualEditor{
             mSize = ImVec2(dist, dist);
         }
 
+        QuadShape::QuadShape(const QuadShape &other) : Shape(other) {
+            this->mSize = other.mSize;
+        }
+
     }
 }

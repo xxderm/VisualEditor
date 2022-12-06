@@ -39,6 +39,20 @@ namespace VisualEditor {
             for (auto ind : indicesToErase)
                 mEntities->Remove(ind);
         });
+        mEditorView->OnUnGroup([this]() {
+            std::vector<uint32_t> indicesToErase;
+            for (uint32_t i = 0; i < mEntities->Size(); i++) {
+                if ((*mEntities)[i]->IsSelected()) {
+                    indicesToErase.push_back(i);
+                    auto entities = ((Graphics::GroupShape*)(*mEntities)[i].get())->GetEntities();
+                    for (uint32_t j = 0; j < entities.Size(); ++j) {
+                        mEntities->Push(std::shared_ptr<Graphics::Shape>(entities[j]));
+                    }
+                }
+            }
+            for (auto ind : indicesToErase)
+                mEntities->Remove(ind);
+        });
     }
 
     void EditorController::Render(SDL_Window* window) {

@@ -56,4 +56,8 @@ namespace VisualEditor::Graphics {
         mRadius = dist;
     }
 
+    CircleShape::CircleShape(const CircleShape &other)  : Shape(other) {
+        this->mRadius = other.mRadius;
+    }
+
 }

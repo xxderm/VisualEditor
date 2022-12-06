@@ -26,7 +26,7 @@ namespace VisualEditor::Graphics {
     class Shape : public IFlexible {
     public:
         Shape() = default;
-        Shape(const Shape& other) = delete;
+        Shape(const Shape& other);
         virtual void Render() = 0;
         void OnEvent(SDL_Event *event, ImVec2 mousePos);
         virtual void Move(ImVec2 delta) = 0;

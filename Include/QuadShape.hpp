@@ -5,6 +5,8 @@ namespace VisualEditor {
 
         class QuadShape final : public Shape {
         public:
+            QuadShape() = default;
+            QuadShape(const QuadShape& other);
             void Render() override;
             bool IsMouseHover(ImVec2 mousePos) override;
             bool IsInFlexBorder(ImVec2 mouse) override;

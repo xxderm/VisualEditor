@@ -55,4 +55,9 @@ namespace VisualEditor::Graphics {
         }
     }
 
+    Shape::Shape(const Shape& other) {
+        this->mPosition = other.mPosition;
+        this->mColor = other.mColor;
+    }
+
 }

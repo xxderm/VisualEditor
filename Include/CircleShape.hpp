@@ -4,6 +4,8 @@ namespace VisualEditor::Graphics {
 
     class CircleShape final : public Shape {
     public:
+        CircleShape() = default;
+        CircleShape(const CircleShape& other);
         void Render() override;
         std::string GetName() const override { return "CircleShape"; }
         bool IsMouseHover(ImVec2 mousePos) override;

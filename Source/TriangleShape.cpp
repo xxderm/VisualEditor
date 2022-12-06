@@ -69,5 +69,9 @@ namespace VisualEditor {
             mSize = dist;
         }
 
+        TriangleShape::TriangleShape(const TriangleShape &other) : Shape(other) {
+            this->mSize = other.mSize;
+        }
+
     }
 }

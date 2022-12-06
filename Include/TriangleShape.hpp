@@ -5,6 +5,8 @@ namespace VisualEditor {
 
         class TriangleShape final : public Shape {
         public:
+            TriangleShape() = default;
+            TriangleShape(const TriangleShape& other);
             void Render() override;
             bool IsMouseHover(ImVec2 mousePos) override;
             bool IsInFlexBorder(ImVec2 mouse) override;

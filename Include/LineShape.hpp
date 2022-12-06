@@ -5,6 +5,8 @@ namespace VisualEditor {
 
         class LineShape final : public Shape {
         public:
+            LineShape() = default;
+            LineShape(const LineShape& other) {}
             void Render() override;
             bool IsMouseHover(ImVec2 mousePos) override {}
             bool IsInFlexBorder(ImVec2 mouse) override {}
