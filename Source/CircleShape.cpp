@@ -34,4 +34,8 @@ namespace VisualEditor::Graphics {
         return copy;
     }
 
+    void CircleShape::Move(ImVec2 delta) {
+        mPosition = delta;
+    }
+
 }

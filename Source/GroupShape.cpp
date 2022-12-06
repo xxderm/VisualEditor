@@ -57,4 +57,12 @@ namespace VisualEditor::Graphics {
         return ImVec4(xMax / 2. + xMin / 2., yMax / 2. + yMin / 2., width, height);
     }
 
+    void GroupShape::Move(ImVec2 delta) {
+        for (uint32_t i = 0; i < mEntities.Size(); i++) {
+            auto currentPosition = mEntities[i]->GetPosition();
+            auto deltaDiff = ImVec2(currentPosition.x - mPosition.x, currentPosition.y - mPosition.y);
+            mEntities[i]->SetPos(ImVec2(delta.x + deltaDiff.x, delta.y + deltaDiff.y));
+        }
+    }
+
 }

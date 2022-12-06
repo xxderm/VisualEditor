@@ -32,5 +32,9 @@ namespace VisualEditor{
             return copy;
         }
 
+        void QuadShape::Move(ImVec2 delta) {
+            mPosition = delta;
+        }
+
     }
 }

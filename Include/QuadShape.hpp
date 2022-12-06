@@ -9,6 +9,7 @@ namespace VisualEditor {
             bool IsMouseHover(ImVec2 mousePos) override;
             std::string GetName() const override { return "QuadShape"; }
             Quad GetBounds(ImVec2 pos) override;
+            void Move(ImVec2 delta) override;
             Shape* Copy() override;
         private:
             ImVec2 mSize = ImVec2(0.4, 0.4);

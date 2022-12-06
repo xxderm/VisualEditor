@@ -46,5 +46,9 @@ namespace VisualEditor {
             return copy;
         }
 
+        void TriangleShape::Move(ImVec2 delta) {
+            mPosition = delta;
+        }
+
     }
 }

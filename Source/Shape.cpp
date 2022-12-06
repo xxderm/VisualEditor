@@ -53,7 +53,7 @@ namespace VisualEditor::Graphics {
         }
     }
 
-    void Shape::Move(ImVec2 delta) {
-        mPosition = delta;
-    }
+    //void Shape::Move(ImVec2 delta) {
+        //mPosition = delta;
+   // }
 }
