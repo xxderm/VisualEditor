@@ -85,4 +85,40 @@ namespace VisualEditor::Graphics {
         return copy;
     }
 
+    bool GroupShape::IsInFlexBorder(ImVec2 mouse) {
+        auto points = GetQuadSize();
+        auto pos = ImVec2(points.x, points.y);
+        auto size = ImVec2(points.z, points.w);
+        auto res =
+                (mouse.x > (pos.x - (size.x + 0.05) / 2.)) && (mouse.x < (pos.x - (size.x) / 2.)) ||
+                (mouse.x > (pos.x + (size.x) / 2.)) && (mouse.x < (pos.x + (size.x + 0.05) / 2.)) ||
+                (mouse.y > (pos.y - (size.y + 0.05) / 2.)) && (mouse.y < (pos.y - (size.y) / 2.)) ||
+                (mouse.y > (pos.y + (size.y) / 2.)) && (mouse.y < (pos.y + (size.y + 0.05) / 2.))
+                ;
+        return res;
+    }
+
+    void GroupShape::Amplify(ImVec2 mouse) {
+        auto points = GetQuadSize();
+        auto dist = sqrt( ((points.x - mouse.x) * (points.x - mouse.x))
+                          + ((points.y - mouse.y) * (points.y - mouse.y)) );
+        for (uint32_t i = 0; i < mEntities.Size(); i++) {
+            auto posEntity = mEntities[i]->GetPosition();
+            auto boundsEntity = mEntities[i]->GetBounds(mEntities[i]->GetPosition());
+            auto widthEntity = boundsEntity.TopLeft.x - boundsEntity.TopRight.x;
+            auto heightEntity = boundsEntity.TopLeft.y - boundsEntity.BtmLeft.y;
+            ImVec2 amplify = ImVec2(
+                    posEntity.x - widthEntity / 2.,
+                    posEntity.y - heightEntity / 2.
+                    );
+            mEntities[i]->Flex(dist / 2. + 0.025);
+        }
+    }
+
+    void GroupShape::Flex(double dist) {
+        for (uint32_t i = 0; i < mEntities.Size(); i++) {
+            mEntities[i]->Flex(dist);
+        }
+    }
+
 }

@@ -42,6 +42,7 @@ namespace VisualEditor {
     }
 
     void EditorController::Render(SDL_Window* window) {
+        SDL_SetCursor(SDL_CreateSystemCursor(mCursor));
         int ww, wh;
         SDL_GetWindowSize(window, &ww, &wh);
         mScrSize.x = ww;
@@ -52,6 +53,7 @@ namespace VisualEditor {
     }
 
     void EditorController::OnEvent(SDL_Event *event) {
+        mCursor = SDL_SYSTEM_CURSOR_ARROW;
         auto scenePos = mEditorView->GetScenePos();
         auto sceneSize = mEditorView->GetSceneSize();
         auto pos = ImVec2(event->motion.x - scenePos.x, event->motion.y - scenePos.y);
@@ -59,6 +61,8 @@ namespace VisualEditor {
         auto ny = (float)((float)-pos.y / sceneSize.y) * 2.f + 1.f;
         for (uint32_t i = 0; i < mEntities->Size(); i++) {
             (*mEntities)[i]->OnEvent(event, ImVec2(nx, -ny));
+            if ((*mEntities)[i]->IsInFlexBorder(ImVec2(nx, -ny)))
+                mCursor = SDL_SYSTEM_CURSOR_SIZEWE;
         }
 
     }

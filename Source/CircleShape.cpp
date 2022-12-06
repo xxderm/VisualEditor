@@ -38,4 +38,22 @@ namespace VisualEditor::Graphics {
         mPosition = delta;
     }
 
+    bool CircleShape::IsInFlexBorder(ImVec2 mouse) {
+        auto dist = sqrt( ((mPosition.x - mouse.x) * (mPosition.x - mouse.x))
+                          + ((mPosition.y - mouse.y) * (mPosition.y - mouse.y)) );
+        return dist > mRadius && dist < mRadius + 0.05;
+    }
+
+    void CircleShape::Amplify(ImVec2 mouse) {
+        auto dist = sqrt( ((mPosition.x - mouse.x) * (mPosition.x - mouse.x))
+                          + ((mPosition.y - mouse.y) * (mPosition.y - mouse.y)) );
+        auto delta = mRadius - dist;
+        //mRadius = dist - 0.025;
+        Flex(dist - 0.025);
+    }
+
+    void CircleShape::Flex(double dist) {
+        mRadius = dist;
+    }
+
 }

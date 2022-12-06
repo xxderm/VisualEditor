@@ -9,6 +9,9 @@ namespace VisualEditor::Graphics {
         void Add(Shape* shape);
         void Render() override;
         bool IsMouseHover(ImVec2 mousePos) override;
+        bool IsInFlexBorder(ImVec2 mouse) override;
+        void Amplify(ImVec2 mouse) override;
+        void Flex(double dist) override;
         void Move(ImVec2 delta) override;
         std::string GetName() const override { return "GroupShape"; }
         Shape* Copy() override;

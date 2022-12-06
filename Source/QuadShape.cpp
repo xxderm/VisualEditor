@@ -36,5 +36,26 @@ namespace VisualEditor{
             mPosition = delta;
         }
 
+        bool QuadShape::IsInFlexBorder(ImVec2 mouse) {
+            auto res =
+                    ( (mouse.x >= mPosition.x - (mSize.x + 0.05) / 2. && mouse.x < mPosition.x - (mSize.x ) / 2.)
+                    || (mouse.x > mPosition.x + (mSize.x ) / 2. && mouse.x < mPosition.x + (mSize.x + 0.05) / 2.) )
+                    ||
+                    ( (mouse.y >= mPosition.y - (mSize.y + 0.05) / 2. && mouse.y < mPosition.y - mSize.y / 2.)
+                    || (mouse.y > mPosition.y + mSize.y / 2. && mouse.y < mPosition.y + (mSize.y + 0.05) / 2.) );
+            return res;
+        }
+
+        void QuadShape::Amplify(ImVec2 mouse) {
+            auto dist = sqrt( ((mPosition.x - mouse.x) * (mPosition.x - mouse.x))
+                              + ((mPosition.y - mouse.y) * (mPosition.y - mouse.y)) );
+            //mSize = ImVec2(dist * 2. - 0.025, dist * 2. - 0.025);
+            Flex(dist * 2. - 0.025);
+        }
+
+        void QuadShape::Flex(double dist) {
+            mSize = ImVec2(dist, dist);
+        }
+
     }
 }

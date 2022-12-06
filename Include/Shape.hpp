@@ -10,7 +10,20 @@ namespace VisualEditor::Graphics {
         ImVec2 BtmRight{};
     };
 
-    class Shape {
+    class IFlexible {
+    public:
+        virtual bool IsInFlexBorder(ImVec2 mouse) = 0;
+        virtual void Amplify(ImVec2 mouse) = 0;
+        virtual void Flex(double dist) = 0;
+    };
+
+    class IMemorable {
+    public:
+        virtual void Load(std::string projectFile, uint32_t index) = 0;
+        virtual void Save(std::string projectFile, uint32_t index) = 0;
+    };
+
+    class Shape : public IFlexible {
     public:
         Shape() = default;
         Shape(const Shape& other) = delete;
@@ -18,8 +31,6 @@ namespace VisualEditor::Graphics {
         void OnEvent(SDL_Event *event, ImVec2 mousePos);
         virtual void Move(ImVec2 delta) = 0;
         virtual bool IsMouseHover(ImVec2 mousePos) = 0;
-        virtual void Load(std::string projFile, uint32_t index) {}
-        virtual void Save(std::string projFile, uint32_t index) {}
         virtual Shape* Copy() = 0;
         void SetColor(ImVec4 color) { mColor = color; }
         void SetPos(ImVec2 pos) { mPosition = pos; }
@@ -38,6 +49,7 @@ namespace VisualEditor::Graphics {
         bool mSelected = false;
         bool mMousePressed = false;
         bool mShift = false;
+        bool mIsFlex = false;
         ImVec2 mDeltaDiff{};
     };
 

@@ -18,6 +18,8 @@ namespace VisualEditor::Graphics {
     }
 
     void Shape::OnEvent(SDL_Event *event, ImVec2 mousePos) {
+        if (mIsFlex && mMousePressed)
+            Amplify(mousePos);
         if (event->type == SDL_MOUSEBUTTONDOWN || event->type == SDL_MOUSEBUTTONUP) {
             if (event->button.button == SDL_BUTTON_RIGHT)
                 return;
@@ -34,6 +36,7 @@ namespace VisualEditor::Graphics {
         if (event->type == SDL_MOUSEBUTTONDOWN &&
             ((mousePos.x > -1 && mousePos.x < 1) && (mousePos.y > -1 && mousePos.y < 1))
                 ) {
+            mIsFlex = IsInFlexBorder(mousePos);
             if (mShift && mHovered)
                 mSelected = mHovered;
             mMousePressed = true;

@@ -50,5 +50,24 @@ namespace VisualEditor {
             mPosition = delta;
         }
 
+        bool TriangleShape::IsInFlexBorder(ImVec2 mouse) {
+            auto topPoint = ImVec2(mPosition.x, mPosition.y - mSize);
+            auto leftPoint = ImVec2(mPosition.x - mSize, mPosition.y + mSize);
+            auto rightPoint = ImVec2(mPosition.x + mSize, mPosition.y + mSize);
+            return (mouse.x >= topPoint.x - 0.05 && mouse.x <= topPoint.x + 0.05) &&
+                   (mouse.y >= topPoint.y - 0.05 && mouse.y <= topPoint.y + 0.05);
+        }
+
+        void TriangleShape::Amplify(ImVec2 mouse) {
+            auto dist = sqrt( ((mPosition.x - mouse.x) * (mPosition.x - mouse.x))
+                              + ((mPosition.y - mouse.y) * (mPosition.y - mouse.y)) );
+            //mSize = dist - 0.025;
+            Flex(dist - 0.025);
+        }
+
+        void TriangleShape::Flex(double dist) {
+            mSize = dist;
+        }
+
     }
 }

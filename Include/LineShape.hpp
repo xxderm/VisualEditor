@@ -7,6 +7,9 @@ namespace VisualEditor {
         public:
             void Render() override;
             bool IsMouseHover(ImVec2 mousePos) override {}
+            bool IsInFlexBorder(ImVec2 mouse) override {}
+            void Amplify(ImVec2 mouse) override {}
+            void Flex(double dist) override {}
             std::string GetName() const override { return "LineShape"; }
             Quad GetBounds(ImVec2 pos) override{ return Quad();}
             void Move(ImVec2 delta) override{}

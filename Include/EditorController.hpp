@@ -18,6 +18,7 @@ namespace VisualEditor {
         std::shared_ptr<Storage<std::shared_ptr<Graphics::Shape>>> mEntities;
         std::vector<std::shared_ptr<ICommand>> mActions;
         ImVec2 mScrSize;
+        SDL_SystemCursor mCursor = SDL_SYSTEM_CURSOR_ARROW;
     };
 
 }
