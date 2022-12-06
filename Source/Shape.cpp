@@ -47,13 +47,9 @@ namespace VisualEditor::Graphics {
         if (event->type == SDL_MOUSEMOTION) {
             auto normalizePosition = ImVec2(mousePos.x + mDeltaDiff.x, mousePos.y + mDeltaDiff.y);
             if (mMousePressed && mHovered && !CheckBounds(normalizePosition) ) {
-                //mPosition = normalizePosition;
                 this->Move(normalizePosition);
             }
         }
     }
 
-    //void Shape::Move(ImVec2 delta) {
-        //mPosition = delta;
-   // }
 }

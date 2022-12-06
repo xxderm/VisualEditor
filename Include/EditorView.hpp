@@ -16,6 +16,8 @@ namespace VisualEditor {
         void OnAddShape(const std::function<void(Graphics::ShapeType)>& fn);
         void OnChangeColor(const std::function<void(float r, float g, float b)>& fn);
         void OnMakeGroup(const std::function<void()>& fn);
+        void OnUnGroup(const std::function<void()>& fn);
+        void OnDelete(const std::function<void()>& fn);
         void SetEntities(const std::shared_ptr<Storage<std::shared_ptr<Graphics::Shape>>>& entities);
         void SetActions(const std::vector<std::shared_ptr<ICommand>>& actions);
         ImVec2 GetScenePos() const { return mScenePos; }
@@ -34,6 +36,8 @@ namespace VisualEditor {
         std::function<void(Graphics::ShapeType)> mOnAddCallBack;
         std::function<void(float r, float g, float b)> mOnChangeColorCallBack;
         std::function<void()> mOnMakeGroup;
+        std::function<void()> mOnUnGroup;
+        std::function<void()> mOnDelete;
         GLuint mTriangleIcon{};
         GLuint mCircleIcon{};
         GLuint mQuadIcon{};

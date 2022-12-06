@@ -18,17 +18,26 @@ namespace VisualEditor {
             }
         });
         mEditorView->OnMakeGroup([this]() {
+            std::vector<uint32_t> indicesToErase;
             auto gs = Graphics::ShapeFactory::CreateShape(Graphics::ShapeType::GROUP);
             for (uint32_t i = 0; i < mEntities->Size(); i++) {
                 if ((*mEntities)[i]->IsSelected()) {
                     ((Graphics::GroupShape*)gs.get())->Add((*mEntities)[i]->Copy());
-                    mIndicesToErase.push_back(i);
+                    indicesToErase.push_back(i);
                 }
             }
-            for (auto ind : mIndicesToErase)
+            for (auto ind : indicesToErase)
                 mEntities->Remove(ind);
-            mIndicesToErase.clear();
             mEntities->Push(gs);
+        });
+        mEditorView->OnDelete([this]() {
+            std::vector<uint32_t> indicesToErase;
+            for (uint32_t i = 0; i < mEntities->Size(); i++) {
+                if ((*mEntities)[i]->IsSelected())
+                    indicesToErase.push_back(i);
+            }
+            for (auto ind : indicesToErase)
+                mEntities->Remove(ind);
         });
     }
 

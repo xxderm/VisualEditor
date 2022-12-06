@@ -13,6 +13,7 @@ namespace VisualEditor::Graphics {
         std::string GetName() const override { return "GroupShape"; }
         Shape* Copy() override {}
         Quad GetBounds(ImVec2 pos) override;
+        ~GroupShape();
     private:
         ImVec4 GetQuadSize();
     private:

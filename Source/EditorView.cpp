@@ -144,14 +144,17 @@ namespace VisualEditor {
             if (ImGui::MenuItem("Group", "Selected entities")) {
                 mOnMakeGroup();
             }
+            if (ImGui::MenuItem("UnGroup")) {
+                mOnUnGroup();
+            }
+            if (ImGui::MenuItem("Delete")) {
+                mOnDelete();
+            }
+            ImGui::Separator();
             if (ImGui::MenuItem("Undo", "Last action")) {
 
             }
-            if (ImGui::MenuItem("Redo", "Last action")) {
-
-            }
-            ImGui::Separator();
-            if (ImGui::MenuItem("Delete", "Selected entities")) {
+            if (ImGui::MenuItem("Redo")) {
 
             }
             ImGui::EndPopup();
@@ -178,6 +181,14 @@ namespace VisualEditor {
 
     void EditorView::OnMakeGroup(const std::function<void()> &fn) {
         mOnMakeGroup = fn;
+    }
+
+    void EditorView::OnUnGroup(const std::function<void()> &fn) {
+        mOnUnGroup = fn;
+    }
+
+    void EditorView::OnDelete(const std::function<void()> &fn) {
+        mOnDelete = fn;
     }
 
 }

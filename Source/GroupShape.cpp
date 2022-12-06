@@ -6,7 +6,7 @@ namespace VisualEditor::Graphics {
         auto points = GetQuadSize();
         mPosition = ImVec2(points.x, points.y);
         mSize = ImVec2(points.z, points.w);
-        if (mHovered)
+        if (mHovered || mSelected)
             GraphicUtility::Grid(mPosition, mSize);
         if (mEntities.Size() > 0) {
             for (uint32_t i = 0; i < mEntities.Size(); i++)
@@ -63,6 +63,11 @@ namespace VisualEditor::Graphics {
             auto deltaDiff = ImVec2(currentPosition.x - mPosition.x, currentPosition.y - mPosition.y);
             mEntities[i]->SetPos(ImVec2(delta.x + deltaDiff.x, delta.y + deltaDiff.y));
         }
+    }
+
+    GroupShape::~GroupShape() {
+        for (int i = 0; i < mEntities.Size(); ++i)
+            delete mEntities[i];
     }
 
 }

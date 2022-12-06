@@ -17,7 +17,6 @@ namespace VisualEditor {
         EditorViewPtr mEditorView;
         std::shared_ptr<Storage<std::shared_ptr<Graphics::Shape>>> mEntities;
         std::vector<std::shared_ptr<ICommand>> mActions;
-        std::vector<uint32_t> mIndicesToErase;
         ImVec2 mScrSize;
     };
 
