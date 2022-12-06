@@ -4,10 +4,8 @@ namespace VisualEditor::Graphics {
 
     void GroupShape::Render() {
         auto points = GetQuadSize();
-        mPosition = ImVec2(points.x, points.y);
-        mSize = ImVec2(points.z, points.w);
         if (mHovered || mSelected)
-            GraphicUtility::Grid(mPosition, mSize);
+            GraphicUtility::Grid(ImVec2(points.x, points.y), ImVec2(points.z, points.w));
         if (mEntities.Size() > 0) {
             for (uint32_t i = 0; i < mEntities.Size(); i++)
                 (mEntities)[i]->Render();
@@ -16,6 +14,9 @@ namespace VisualEditor::Graphics {
 
     void GroupShape::Add(Shape* shape) {
         mEntities.Push(shape);
+        auto points = GetQuadSize();
+        mPosition = ImVec2(points.x, points.y);
+        mSize = ImVec2(points.z, points.w);
     }
 
     Quad GroupShape::GetBounds(ImVec2 pos) {
@@ -61,13 +62,27 @@ namespace VisualEditor::Graphics {
         for (uint32_t i = 0; i < mEntities.Size(); i++) {
             auto currentPosition = mEntities[i]->GetPosition();
             auto deltaDiff = ImVec2(currentPosition.x - mPosition.x, currentPosition.y - mPosition.y);
-            mEntities[i]->SetPos(ImVec2(delta.x + deltaDiff.x, delta.y + deltaDiff.y));
+            mEntities[i]->Move(ImVec2(delta.x + deltaDiff.x, delta.y + deltaDiff.y));
         }
+        // TODO: исправить тремор
+        auto points = GetQuadSize();
+        mPosition = ImVec2(points.x, points.y);
+        mSize = ImVec2(points.z, points.w);
     }
 
     GroupShape::~GroupShape() {
-        for (int i = 0; i < mEntities.Size(); ++i)
-            delete mEntities[i];
+        // TODO: проверять на необходимость освобождения
+        //for (int i = 0; i < mEntities.Size(); ++i)
+            //delete mEntities[i];
+    }
+
+    Shape *GroupShape::Copy() {
+        GroupShape* copy = new GroupShape();
+        copy->mPosition = this->mPosition;
+        copy->mColor = this->mColor;
+        copy->mSize = this->mSize;
+        copy->mEntities = this->mEntities;
+        return copy;
     }
 
 }
