@@ -64,6 +64,7 @@ namespace VisualEditor {
         }
         T& Back() const { return mData[mCurrent - 1]; }
         T& operator[](uint32_t index) { return mData[index]; }
+        T& At(uint32_t index) { return mData[index]; }
         const T& operator[](uint32_t index) const { return mData[index]; }
         bool Empty() const { return mCurrent == 0; }
         uint32_t Size() const noexcept { return mCurrent; }

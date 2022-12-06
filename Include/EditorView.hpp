@@ -5,6 +5,99 @@
 
 namespace VisualEditor {
 
+    class IObserver {
+    public:
+        virtual void Update() = 0;
+    };
+
+    class Observable {
+    public:
+        void AddObserver(IObserver* observer) {
+            mObservers.push_back(observer);
+        }
+        void NotifyUpdate() {
+            for (auto& obs : mObservers)
+                obs->Update();
+        }
+    private:
+        std::vector<IObserver*> mObservers;
+    };
+
+    class EntitiesModel final : public Observable {
+    public:
+        void SetEntities(std::shared_ptr<Storage<std::shared_ptr<Graphics::Shape>>>* entities) {
+            mEntities = entities;
+            this->NotifyUpdate();
+        }
+        void SetScrSize(ImVec2 scr) {
+            this->mScrSize = scr;
+        }
+        std::shared_ptr<Storage<std::shared_ptr<Graphics::Shape>>>* GetEntities() { return mEntities; }
+        ImVec2 GetScrSize() { return mScrSize; }
+    private:
+        std::shared_ptr<Storage<std::shared_ptr<Graphics::Shape>>>* mEntities;
+        ImVec2 mScrSize{};
+    };
+
+    class TreeView final : public IObserver {
+    public:
+        TreeView(EntitiesModel* model) {
+            mModel = model;
+            mModel->AddObserver(this);
+        }
+        void Update() override {
+            std::srand(time(0));
+            auto entities = mModel->GetEntities();
+            auto scrSize = mModel->GetScrSize();
+            ImGui::SetNextWindowPos(ImVec2(5, 20));
+            ImGui::SetNextWindowSize(ImVec2(scrSize.x * 0.2, scrSize.y * 0.25));
+            ImGui::Begin("Objects", 0,
+                         ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoBringToFrontOnFocus);
+
+            for (uint32_t i = 0; i < entities->get()->Size(); i++) {
+                auto current = entities->get()->At(i).get();
+                if (current->GetName() == "GroupShape") {
+                    auto name = "GroupShape##" + std::to_string(i);
+                    auto currentEntitiesGroup = ((Graphics::GroupShape*)(*entities->get())[i].get())->GetEntities();
+                    if (ImGui::TreeNode(name.c_str())) {
+                        RecurseGroup(currentEntitiesGroup);
+                        ImGui::TreePop();
+                    }
+                }
+                else {
+                    auto name = current->GetName() + "##" + std::to_string(i);
+                    if (ImGui::TreeNode(name.c_str())) {
+                        ImGui::TreePop();
+                    }
+                }
+            }
+
+            ImGui::End();
+        }
+    private:
+        void RecurseGroup(Storage<Graphics::Shape*> sh) {
+            std::srand(time(0));
+            for (uint32_t i = 0; i < sh.Size(); ++i) {
+                if (sh[i]->GetName() == "GroupShape") {
+                    auto name = "GroupShape##" + std::to_string(i);
+                    if (ImGui::TreeNode(name.c_str())) {
+                        auto entt = ((Graphics::GroupShape *) (sh)[i])->GetEntities();
+                        RecurseGroup(entt);
+                        ImGui::TreePop();
+                    }
+                }
+                else {
+                    auto name = sh[i]->GetName() + "##" + std::to_string(i);
+                    if (ImGui::TreeNode(name.c_str())) {
+                        ImGui::TreePop();
+                    }
+                }
+            }
+        }
+    private:
+        EntitiesModel* mModel;
+    };
+
     class EditorView;
     using EditorViewPtr = std::shared_ptr<EditorView>;
 
@@ -46,6 +139,7 @@ namespace VisualEditor {
         std::vector<std::shared_ptr<ICommand>> mActions;
         ImVec2 mScenePos{};
         ImVec2 mSceneSize{};
+        bool mColorEdit = false;
     };
 
 }

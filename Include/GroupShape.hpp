@@ -16,6 +16,11 @@ namespace VisualEditor::Graphics {
         void Move(ImVec2 delta) override;
         std::string GetName() const override { return "GroupShape"; }
         Storage<Shape*> GetEntities() { return mEntities; }
+        void SetColor(ImVec4 color) override {
+            for (uint32_t i = 0; i < mEntities.Size(); ++i) {
+                mEntities[i]->SetColor(color);
+            }
+        }
         Shape* Copy() override;
         Quad GetBounds(ImVec2 pos) override;
         ~GroupShape();

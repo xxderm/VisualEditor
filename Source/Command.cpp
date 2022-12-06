@@ -11,15 +11,24 @@ namespace VisualEditor {
     }
 
     void ShapeChangeColorCommand::Execute() {
-        mShape->SetColor(mNewColor);
+        if (mShape->GetName() == "GroupShape") {
+            mShape->SetColor(mNewColor);
+        }
+        else mShape->SetColor(mNewColor);
     }
 
     void ShapeChangeColorCommand::Undo() {
-        mShape->SetColor(mPrevColor);
+        if (mShape->GetName() == "GroupShape") {
+            mShape->SetColor(mPrevColor);
+        }
+        else mShape->SetColor(mPrevColor);
     }
 
     void ShapeChangeColorCommand::Redo() {
-        mShape->SetColor(mNewColor);
+        if (mShape->GetName() == "GroupShape") {
+            mShape->SetColor(mNewColor);
+        }
+        else mShape->SetColor(mNewColor);
     }
 
     AddShapeCommand::AddShapeCommand(std::shared_ptr<Storage<std::shared_ptr<Graphics::Shape>>> storage,

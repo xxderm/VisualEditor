@@ -19,6 +19,8 @@ namespace VisualEditor {
         std::vector<std::shared_ptr<ICommand>> mActions;
         ImVec2 mScrSize;
         SDL_SystemCursor mCursor = SDL_SYSTEM_CURSOR_ARROW;
+        EntitiesModel mEntityModel;
+        std::shared_ptr<TreeView> mTreeView;
     };
 
 }

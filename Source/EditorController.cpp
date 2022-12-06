@@ -53,6 +53,7 @@ namespace VisualEditor {
             for (auto ind : indicesToErase)
                 mEntities->Remove(ind);
         });
+        mTreeView = std::make_shared<TreeView>(&mEntityModel);
     }
 
     void EditorController::Render(SDL_Window* window) {
@@ -64,6 +65,9 @@ namespace VisualEditor {
         mEditorView->SetEntities(mEntities);
         mEditorView->SetActions(mActions);
         mEditorView->Render(window);
+        mEntityModel.SetEntities(&mEntities);
+        mEntityModel.SetScrSize(ImVec2(ww, wh));
+
     }
 
     void EditorController::OnEvent(SDL_Event *event) {

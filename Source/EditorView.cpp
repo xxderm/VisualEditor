@@ -24,15 +24,7 @@ namespace VisualEditor {
     }
 
     void EditorView::RenderSceneEntities(SDL_Window *window) {
-        ImGui::SetNextWindowPos(ImVec2(5, 20));
-        ImGui::SetNextWindowSize(ImVec2(mScrWidth * 0.2, mScrHeight * 0.25));
-        ImGui::Begin("Objects", 0,
-                     ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoBringToFrontOnFocus);
-        for (uint32_t i = 0; i < mEntities->Size(); i++) {
-            auto name = (*mEntities)[i]->GetName();
-            ImGui::Selectable(name.c_str());
-        }
-        ImGui::End();
+
     }
 
     void EditorView::RenderEntityList(SDL_Window *window) {
@@ -97,8 +89,28 @@ namespace VisualEditor {
         ImGui::SetNextWindowSize(ImVec2(mScrWidth * 0.2, mScrHeight * 0.3));
         ImGui::Begin("Settings", 0,
                      ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoBringToFrontOnFocus);
-        if (ImGui::ColorPicker3("##ColorPick", mColor)) {
-            mOnChangeColorCallBack(mColor[0], mColor[1], mColor[2]);
+        if (ImGui::BeginTable("##Settings", 2)) {
+
+            ImGui::TableNextRow();
+            ImGui::TableSetColumnIndex(0);
+            ImGui::TableSetBgColor(ImGuiTableBgTarget_::ImGuiTableBgTarget_CellBg,
+                                   IM_COL32(81, 81, 81, 255));
+            ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 3);
+            ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 3);
+            ImGui::Text("Color");
+            ImGui::TableSetColumnIndex(1);
+            ImGui::TableSetBgColor(ImGuiTableBgTarget_::ImGuiTableBgTarget_CellBg,
+                                   IM_COL32(81, 81, 81, 255));
+            if (ImGui::Button("Change")) mColorEdit = true;
+            if (mColorEdit) {
+                ImGui::ColorPicker3("##ColorPick", mColor);
+                if (ImGui::Button("Submit")) {
+                    mOnChangeColorCallBack(mColor[0], mColor[1], mColor[2]);
+                }
+                if (ImGui::Button("Cancel"))
+                    mColorEdit = false;
+            }
+            ImGui::EndTable();
         }
         ImGui::End();
     }

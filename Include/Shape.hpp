@@ -32,7 +32,7 @@ namespace VisualEditor::Graphics {
         virtual void Move(ImVec2 delta) = 0;
         virtual bool IsMouseHover(ImVec2 mousePos) = 0;
         virtual Shape* Copy() = 0;
-        void SetColor(ImVec4 color) { mColor = color; }
+        virtual void SetColor(ImVec4 color) { mColor = color; }
         void SetPos(ImVec2 pos) { mPosition = pos; }
         virtual std::string GetName() const { return "Shape"; }
         ImVec2 GetPosition() const { return mPosition; }
