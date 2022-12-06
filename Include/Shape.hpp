@@ -98,6 +98,18 @@ namespace VisualEditor::Graphics {
             glEnd();
             glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
         }
+        static void Grid(ImVec2 pos, ImVec2 size) {
+            glLineWidth(3);
+            glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+            glColor3f(1, 1, 0.6);
+            glBegin(GL_QUADS);
+            glVertex2f(pos.x - size.x / 2., pos.y + size.y / 2.);
+            glVertex2f(pos.x + size.x / 2., pos.y + size.y / 2.);
+            glVertex2f(pos.x + size.x / 2., pos.y - size.y / 2.);
+            glVertex2f(pos.x - size.x / 2., pos.y - size.y / 2.);
+            glEnd();
+            glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+        }
     };
 
 }

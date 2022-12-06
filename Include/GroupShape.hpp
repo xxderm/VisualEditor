@@ -13,7 +13,10 @@ namespace VisualEditor::Graphics {
         Shape* Copy() override {}
         Quad GetBounds(ImVec2 pos) override;
     private:
+        ImVec4 GetQuadSize();
+    private:
         Storage<Shape*> mEntities;
+        ImVec2 mSize{};
     };
 
 }
