@@ -9,6 +9,8 @@ namespace VisualEditor::Graphics {
         GroupShape(const GroupShape& other);
         void Add(Shape* shape);
         void Render() override;
+        void Load(nlohmann::json* data, uint32_t* index) override;
+        void Save(nlohmann::json* data, uint32_t* index) override;
         bool IsMouseHover(ImVec2 mousePos) override;
         bool IsInFlexBorder(ImVec2 mouse) override;
         void Amplify(ImVec2 mouse) override;

@@ -19,11 +19,11 @@ namespace VisualEditor::Graphics {
 
     class IMemorable {
     public:
-        virtual void Load(std::string projectFile, uint32_t index) = 0;
-        virtual void Save(std::string projectFile, uint32_t index) = 0;
+        virtual void Load(nlohmann::json* data, uint32_t* index) = 0;
+        virtual void Save(nlohmann::json* data, uint32_t* index) = 0;
     };
 
-    class Shape : public IFlexible {
+    class Shape : public IFlexible, public IMemorable {
     public:
         Shape() = default;
         Shape(const Shape& other);
@@ -33,6 +33,8 @@ namespace VisualEditor::Graphics {
         virtual bool IsMouseHover(ImVec2 mousePos) = 0;
         virtual Shape* Copy() = 0;
         virtual void SetColor(ImVec4 color) { mColor = color; }
+        virtual void Load(nlohmann::json* data, uint32_t* index) override;
+        virtual void Save(nlohmann::json* data, uint32_t* index) override;
         void SetPos(ImVec2 pos) { mPosition = pos; }
         virtual std::string GetName() const { return "Shape"; }
         ImVec2 GetPosition() const { return mPosition; }

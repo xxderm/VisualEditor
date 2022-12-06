@@ -86,12 +86,38 @@ namespace VisualEditor {
     }
 
     void EditorController::Save(std::string project) {
+        std::string name = project;
         nlohmann::json data;
-        data["EntityCount"] = mEntities->Size();
-        std::ofstream f(project);
+        std::ofstream f;
+        f.open(name.c_str(), std::ios_base::trunc);
+        f.clear();
+        uint32_t index = 0;
+        for (uint32_t i = 0; i < mEntities->Size(); i++) {
+            mEntities->At(i)->Save(&data, &index);
+            ++index;
+        }
+        data["EntityCount"] = index;
         auto dump = data.dump(4);
         f.write(dump.data(), dump.size());
         f.close();
+    }
+
+    void EditorController::Load(std::string project) {
+        mEntities = std::make_shared<Storage<std::shared_ptr<Graphics::Shape>>>();
+        std::string name = project;
+        std::ifstream f(name.c_str());
+        nlohmann::json data = nlohmann::json::parse(f);
+        uint32_t count = data["EntityCount"];
+        for (uint32_t i = 0; i < count; ++i) {
+            std::string shapeTitle = data[std::to_string(i)]["Name"];
+            if (shapeTitle == "TriangleShape")
+                mEntities->Push(Graphics::ShapeFactory::CreateShape(Graphics::ShapeType::TRIANGLE));
+            if (shapeTitle == "CircleShape")
+                mEntities->Push(Graphics::ShapeFactory::CreateShape(Graphics::ShapeType::CIRCLE));
+            if (shapeTitle == "QuadShape")
+                mEntities->Push(Graphics::ShapeFactory::CreateShape(Graphics::ShapeType::QUAD));
+            mEntities->Back()->Load(&data, &i);
+        }
     }
 
 }

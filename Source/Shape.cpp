@@ -60,4 +60,22 @@ namespace VisualEditor::Graphics {
         this->mColor = other.mColor;
     }
 
+    void Shape::Load(nlohmann::json* data, uint32_t* index) {
+        mPosition.x = (*data)[std::to_string(*index)]["Position"]["X"];
+        mPosition.y = (*data)[std::to_string(*index)]["Position"]["Y"];
+        mColor.x = (*data)[std::to_string(*index)]["Color"]["R"];
+        mColor.y = (*data)[std::to_string(*index)]["Color"]["G"];
+        mColor.z = (*data)[std::to_string(*index)]["Color"]["B"];
+        mColor.w = (*data)[std::to_string(*index)]["Color"]["A"];
+    }
+
+    void Shape::Save(nlohmann::json *data, uint32_t* index) {
+        (*data)[std::to_string(*index)]["Position"]["X"] = mPosition.x;
+        (*data)[std::to_string(*index)]["Position"]["Y"] = mPosition.y;
+        (*data)[std::to_string(*index)]["Color"]["R"] = mColor.x;
+        (*data)[std::to_string(*index)]["Color"]["G"] = mColor.y;
+        (*data)[std::to_string(*index)]["Color"]["B"] = mColor.z;
+        (*data)[std::to_string(*index)]["Color"]["A"] = mColor.w;
+    }
+
 }

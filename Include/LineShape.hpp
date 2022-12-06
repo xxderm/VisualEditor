@@ -7,6 +7,8 @@ namespace VisualEditor {
         public:
             LineShape() = default;
             LineShape(const LineShape& other) {}
+            void Load(nlohmann::json* data, uint32_t* index) override {}
+            void Save(nlohmann::json* data, uint32_t* index) override {}
             void Render() override;
             bool IsMouseHover(ImVec2 mousePos) override {}
             bool IsInFlexBorder(ImVec2 mouse) override {}

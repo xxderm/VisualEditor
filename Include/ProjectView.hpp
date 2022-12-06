@@ -12,7 +12,10 @@ namespace VisualEditor {
         ProjectView(const ProjectView& other) = delete;
         void Render(SDL_Window* window);
         void OnAddProjectCallBack(const std::function<void(std::string)>& fn);
+        void OnOpenProjectCallBack(const std::function<void(std::string)>& fn);
         void SetData(std::shared_ptr<nlohmann::json> data);
+        void Hide();
+        void Show();
     private:
         void RenderProjectTable(std::string projName, std::string projNum);
         void RenderProjectAdd();
@@ -29,6 +32,7 @@ namespace VisualEditor {
         ImVec4 mBtnColor = ImVec4(0.129, 0.141, 0.149, 1.0);
         std::string mProjectAddName;
         std::function<void(std::string)> mAddProjectCallBack;
+        std::function<void(std::string)> mOnOpenProjectCallBack;
         std::shared_ptr<nlohmann::json> mData;
     };
 

@@ -56,8 +56,11 @@ namespace VisualEditor {
         ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 17);
         ImGui::Text("%s", projName.c_str());
         ImGui::SameLine();
-        ImGui::Selectable(projNum.c_str(), false,
-                          ImGuiSelectableFlags_SpanAllColumns, ImVec2(mScrWidth * 0.2685, 50));
+        if (ImGui::Selectable(projNum.c_str(), false,
+                          ImGuiSelectableFlags_SpanAllColumns, ImVec2(mScrWidth * 0.2685, 50))) {
+            mOnOpenProjectCallBack(projName);
+            mOpened = false;
+        }
     }
 
     void ProjectView::RenderProjectAdd() {
@@ -84,6 +87,7 @@ namespace VisualEditor {
             if (ImGui::ImageButton((ImTextureID)mSuccesProjectAddIcon,
                                    ImVec2(14, 15))) {
                 mAddProjectCallBack(mProjectAddName);
+                mOpened = false;
                 ClearName();
                 mProjectAddProcess = false;
             }
@@ -102,6 +106,18 @@ namespace VisualEditor {
     void ProjectView::ClearName() {
         mProjectAddName.clear();
         mProjectAddName.resize(15);
+    }
+
+    void ProjectView::OnOpenProjectCallBack(const std::function<void(std::string)> &fn) {
+        mOnOpenProjectCallBack = fn;
+    }
+
+    void ProjectView::Hide() {
+        mOpened = false;
+    }
+
+    void ProjectView::Show() {
+        mOpened = true;
     }
 
 }

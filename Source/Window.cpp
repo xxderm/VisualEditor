@@ -161,6 +161,14 @@ namespace VisualEditor {
             RenderMainMenuBar();
             mEditorController->Render(mWindow);
             mProjectController->Render(mWindow);
+            mProjectController->OnOpenProjectCallBack([this](std::string proj) {
+                mEditorController->Load(proj);
+                this->mProjectTitle = proj;
+            });
+            mProjectController->OnAddProjectCallBack([this](std::string proj) {
+                mEditorController->Save(proj);
+                this->mProjectTitle = proj;
+            });
             this->EndFrame();
         }
     }
@@ -175,17 +183,17 @@ namespace VisualEditor {
             ImGui::SameLine();
             if (ImGui::BeginMenu("File")) {
                 if (ImGui::MenuItem("New project")) {
-
+                    mProjectController->Show();
                 }
                 if (ImGui::MenuItem("Open project")) {
-
+                    mProjectController->Show();
                 }
                 ImGui::Separator();
                 if (ImGui::MenuItem("Save")) {
-                    mEditorController->Save(mProjectTitle + ".json");
+                    mEditorController->Save(mProjectTitle);
                 }
                 if (ImGui::MenuItem("Save as")) {
-
+                    mEditorController->Save(mProjectTitle);
                 }
                 ImGui::Separator();
                 if (ImGui::MenuItem("Exit"))

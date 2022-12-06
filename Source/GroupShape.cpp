@@ -128,4 +128,20 @@ namespace VisualEditor::Graphics {
         }
     }
 
+    void GroupShape::Save(nlohmann::json *data, uint32_t* index) {
+        for (uint32_t i = 0; i < mEntities.Size(); i++) {
+            mEntities[i]->Save(data, index);
+            if (i == mEntities.Size() - 1) continue;
+            ++(*index);
+        }
+    }
+
+    void GroupShape::Load(nlohmann::json *data, uint32_t *index) {
+        for (uint32_t i = 0; i < mEntities.Size(); i++) {
+            mEntities[i]->Load(data, index);
+            if (i == mEntities.Size() - 1) continue;
+            ++(*index);
+        }
+    }
+
 }
