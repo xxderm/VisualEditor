@@ -38,5 +38,13 @@ namespace VisualEditor {
             return !(hasNeg && hasPos);
         }
 
+        std::shared_ptr<Shape> TriangleShape::Copy() {
+            std::shared_ptr<TriangleShape> copy = std::make_shared<TriangleShape>();
+            copy->mSize = this->mSize;
+            copy->mPosition = this->mPosition;
+            copy->mColor = this->mColor;
+            return copy;
+        }
+
     }
 }

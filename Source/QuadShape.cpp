@@ -24,5 +24,13 @@ namespace VisualEditor{
             return res;
         }
 
+        std::shared_ptr<Shape> QuadShape::Copy() {
+            std::shared_ptr<QuadShape> copy = std::make_shared<QuadShape>();
+            copy->mSize = this->mSize;
+            copy->mPosition = this->mPosition;
+            copy->mColor = this->mColor;
+            return copy;
+        }
+
     }
 }

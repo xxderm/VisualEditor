@@ -26,4 +26,12 @@ namespace VisualEditor::Graphics {
         return dist <= mRadius;
     }
 
+    std::shared_ptr<Shape> CircleShape::Copy() {
+        std::shared_ptr<CircleShape> copy = std::make_shared<CircleShape>();
+        copy->mRadius = this->mRadius;
+        copy->mPosition = this->mPosition;
+        copy->mColor = this->mColor;
+        return copy;
+    }
+
 }

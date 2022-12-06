@@ -3,20 +3,20 @@
 namespace VisualEditor::Graphics {
 
     void GroupShape::Render() {
-        if (mEntities.GetSize() > 0) {
-            for (auto begin = mEntities.Begin(); begin != mEntities.End(); ++begin)
+        if (mEntities->GetSize() > 0) {
+            for (auto begin = mEntities->Begin(); begin != mEntities->End(); ++begin)
                 (*begin)->Render();
         }
     }
 
     void GroupShape::Add(std::shared_ptr<Shape> shape) {
-        mEntities.Push(shape);
+        mEntities->Push(shape);
     }
 
     Quad GroupShape::GetBounds(ImVec2 pos) {
         float xMin = 1.f, xMax = -1.f;
         float yMin = 1.f, yMax = -1.f;
-        for (auto begin = mEntities.Begin(); begin != mEntities.End(); ++begin) {
+        for (auto begin = mEntities->Begin(); begin != mEntities->End(); ++begin) {
             auto bounds = (*begin)->GetBounds((*begin)->GetPosition());
             if (bounds.TopLeft.x < xMin)
                 xMin = bounds.TopLeft.x;
@@ -38,7 +38,7 @@ namespace VisualEditor::Graphics {
     }
 
     bool GroupShape::IsMouseHover(ImVec2 mousePos) {
-        for (auto begin = mEntities.Begin(); begin != mEntities.End(); ++begin) {
+        for (auto begin = mEntities->Begin(); begin != mEntities->End(); ++begin) {
             if ((*begin)->IsMouseHover(mousePos))
                 return true;
         }

@@ -22,8 +22,10 @@ namespace VisualEditor {
             uint32_t index = 0;
             for (auto beg = mEntities->Begin(); beg != mEntities->End(); ++beg) {
                 if ((*beg)->IsSelected()) {
-                    dynamic_cast<Graphics::GroupShape*>(groupEntity.get())->Add((*beg));
+                    ((Graphics::GroupShape*)groupEntity.get())->Add(beg->get()->Copy());
+                    mIndicesToErase.push_back(index);
                     mEntities->Pop(index);
+                    // TODO:
                 }
                 ++index;
             }

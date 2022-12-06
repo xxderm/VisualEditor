@@ -20,6 +20,7 @@ namespace VisualEditor::Graphics {
         virtual bool IsMouseHover(ImVec2 mousePos) = 0;
         virtual void Load(std::string projFile, uint32_t index) {}
         virtual void Save(std::string projFile, uint32_t index) {}
+        virtual std::shared_ptr<Shape> Copy() = 0;
         void SetColor(ImVec4 color) { mColor = color; }
         void SetPos(ImVec2 pos) { mPosition = pos; }
         virtual std::string GetName() const { return "Shape"; }
