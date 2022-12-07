@@ -1,5 +1,4 @@
 # VisualEditor
-OOP Lab
 
 ## Visual editor features:
 - Project Load/Save
