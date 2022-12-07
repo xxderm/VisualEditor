@@ -6,14 +6,14 @@ namespace VisualEditor {
         mEntities = std::make_shared<Storage<std::shared_ptr<Graphics::Shape>>>();
         mEditorView = std::make_shared<EditorView>(window);
         mEditorView->OnAddShape([this](Graphics::ShapeType type) {
-            mActions.push_back(std::make_shared<AddShapeCommand>(mEntities, type));
-            mActions.back()->Execute();
+            mCmdDispatcher.ExecuteCommand(std::make_shared<AddShapeCommand>(mEntities, type));
         });
         mEditorView->OnChangeColor([this](float r, float g, float b) {
             for (uint32_t i = 0; i < mEntities->Size(); i++) {
                 if ((*mEntities)[i]->IsSelected()) {
-                    mActions.push_back(std::make_shared<ShapeChangeColorCommand>((*mEntities)[i], ImVec4(r, g, b, 1.)));
-                    mActions.back()->Execute();
+                    mCmdDispatcher.ExecuteCommand(
+                            std::make_shared<ShapeChangeColorCommand>((*mEntities)[i], ImVec4(r, g, b, 1.))
+                                    );
                 }
             }
         });
@@ -53,6 +53,12 @@ namespace VisualEditor {
             for (auto ind : indicesToErase)
                 mEntities->Remove(ind);
         });
+        mEditorView->OnUndo([this]() {
+            mCmdDispatcher.Undo();
+        });
+        mEditorView->OnRedo([this]() {
+            mCmdDispatcher.Redo();
+        });
         mTreeView = std::make_shared<TreeView>(&mEntityModel);
     }
 
@@ -63,7 +69,7 @@ namespace VisualEditor {
         mScrSize.x = ww;
         mScrSize.y = wh;
         mEditorView->SetEntities(mEntities);
-        mEditorView->SetActions(mActions);
+        mEditorView->SetActions(mCmdDispatcher.GetStack());
         mEditorView->Render(window);
         mEntityModel.SetEntities(&mEntities);
         mEntityModel.SetScrSize(ImVec2(ww, wh));

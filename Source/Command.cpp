@@ -50,8 +50,15 @@ namespace VisualEditor {
     }
 
     void AddShapeCommand::Push() {
-        mStorage->Push(Graphics::ShapeFactory::CreateShape(mType));
-        mIndexShape = mStorage->Size();
+        if (!mInit) {
+            mStorage->Push(Graphics::ShapeFactory::CreateShape(mType));
+            mShape = mStorage->Back();
+            mIndexShape = mStorage->Size();
+            mInit = true;
+        }
+        else {
+            mStorage->Push(mShape);
+        }
     }
 
     ShapeMoveCommand::ShapeMoveCommand(const std::shared_ptr<Graphics::Shape> &shape, ImVec2 oldPos, ImVec2 newPos) {

@@ -121,14 +121,19 @@ namespace VisualEditor {
         ImGui::Begin("Actions", 0,
                      ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoBringToFrontOnFocus);
         if (ImGui::BeginTable("##Objects", 1)) {
-            for (auto action : mActions) {
+            std::stack<std::shared_ptr<ICommand>> temp;
+            while (!mActions.empty()) {
+                auto cmd = mActions.top();
+                temp.push(cmd);
                 ImGui::TableNextRow();
                 ImGui::TableSetColumnIndex(0);
                 ImGui::TableSetBgColor(ImGuiTableBgTarget_::ImGuiTableBgTarget_CellBg,
                                        IM_COL32(81, 81, 81, 255));
-                ImGui::Selectable(action->GetName().c_str());
+                ImGui::Selectable(cmd->GetName().c_str());
                 ImGui::TableNextRow();
+                mActions.pop();
             }
+            //mActions.swap(temp);
             ImGui::EndTable();
         }
         ImGui::End();
@@ -164,10 +169,10 @@ namespace VisualEditor {
             }
             ImGui::Separator();
             if (ImGui::MenuItem("Undo", "Last action")) {
-
+                mOnUndo();
             }
             if (ImGui::MenuItem("Redo")) {
-
+                mOnRedo();
             }
             ImGui::EndPopup();
         }
@@ -183,7 +188,7 @@ namespace VisualEditor {
         mEntities = entities;
     }
 
-    void EditorView::SetActions(const std::vector<std::shared_ptr<ICommand>>& actions) {
+    void EditorView::SetActions(const std::stack<std::shared_ptr<ICommand>>& actions) {
         mActions = actions;
     }
 
@@ -201,6 +206,14 @@ namespace VisualEditor {
 
     void EditorView::OnDelete(const std::function<void()> &fn) {
         mOnDelete = fn;
+    }
+
+    void EditorView::OnUndo(const std::function<void()> &fn) {
+        mOnUndo = fn;
+    }
+
+    void EditorView::OnRedo(const std::function<void()> &fn) {
+        mOnRedo = fn;
     }
 
 }

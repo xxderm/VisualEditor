@@ -111,8 +111,10 @@ namespace VisualEditor {
         void OnMakeGroup(const std::function<void()>& fn);
         void OnUnGroup(const std::function<void()>& fn);
         void OnDelete(const std::function<void()>& fn);
+        void OnUndo(const std::function<void()>& fn);
+        void OnRedo(const std::function<void()>& fn);
         void SetEntities(const std::shared_ptr<Storage<std::shared_ptr<Graphics::Shape>>>& entities);
-        void SetActions(const std::vector<std::shared_ptr<ICommand>>& actions);
+        void SetActions(const std::stack<std::shared_ptr<ICommand>>& actions);
         ImVec2 GetScenePos() const { return mScenePos; }
         ImVec2 GetSceneSize() const { return mSceneSize; }
     private:
@@ -131,12 +133,14 @@ namespace VisualEditor {
         std::function<void()> mOnMakeGroup;
         std::function<void()> mOnUnGroup;
         std::function<void()> mOnDelete;
+        std::function<void()> mOnUndo;
+        std::function<void()> mOnRedo;
         GLuint mTriangleIcon{};
         GLuint mCircleIcon{};
         GLuint mQuadIcon{};
         GLuint mLineIcon{};
         std::shared_ptr<Storage<std::shared_ptr<Graphics::Shape>>> mEntities;
-        std::vector<std::shared_ptr<ICommand>> mActions;
+        std::stack<std::shared_ptr<ICommand>> mActions;
         ImVec2 mScenePos{};
         ImVec2 mSceneSize{};
         bool mColorEdit = false;
