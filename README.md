@@ -1,6 +1,6 @@
 # VisualEditor
 
-## Visual editor features:
+## Features:
 - Project Load/Save
 - Create shapes
 - Change color, move
