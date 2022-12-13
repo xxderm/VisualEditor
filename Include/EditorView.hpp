@@ -35,7 +35,7 @@ namespace VisualEditor {
         std::shared_ptr<Storage<std::shared_ptr<Graphics::Shape>>>* GetEntities() { return mEntities; }
         ImVec2 GetScrSize() { return mScrSize; }
     private:
-        std::shared_ptr<Storage<std::shared_ptr<Graphics::Shape>>>* mEntities;
+        std::shared_ptr<Storage<std::shared_ptr<Graphics::Shape>>>* mEntities{};
         ImVec2 mScrSize{};
     };
 
@@ -59,15 +59,18 @@ namespace VisualEditor {
                 if (current->GetName() == "GroupShape") {
                     auto name = "GroupShape##" + std::to_string(i);
                     auto currentEntitiesGroup = ((Graphics::GroupShape*)(*entities->get())[i].get())->GetEntities();
-                    if (ImGui::TreeNode(name.c_str())) {
+                    auto selected = current->IsSelected();
+                    if (ImGui::TreeNodeEx(name.c_str(),
+                            selected ? ImGuiTreeNodeFlags_Selected | ImGuiTreeNodeFlags_DefaultOpen : 0)) {
                         RecurseGroup(currentEntitiesGroup);
                         ImGui::TreePop();
                     }
                 }
                 else {
                     auto name = current->GetName() + "##" + std::to_string(i);
-                    if (ImGui::TreeNode(name.c_str())) {
-                        ImGui::TreePop();
+                    auto selected = current->IsSelected();
+                    if (ImGui::Selectable(name.c_str(), selected)) {
+
                     }
                 }
             }
@@ -88,8 +91,8 @@ namespace VisualEditor {
                 }
                 else {
                     auto name = sh[i]->GetName() + "##" + std::to_string(i);
-                    if (ImGui::TreeNode(name.c_str())) {
-                        ImGui::TreePop();
+                    if (ImGui::Selectable(name.c_str())) {
+
                     }
                 }
             }
