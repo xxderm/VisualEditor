@@ -5,25 +5,7 @@
 
 namespace VisualEditor {
 
-    class IObserver {
-    public:
-        virtual void Update() = 0;
-    };
-
-    class Observable {
-    public:
-        void AddObserver(IObserver* observer) {
-            mObservers.push_back(observer);
-        }
-        void NotifyUpdate() {
-            for (auto& obs : mObservers)
-                obs->Update();
-        }
-    private:
-        std::vector<IObserver*> mObservers;
-    };
-
-    class EntitiesModel final : public Observable {
+    class EntitiesModel final : public Graphics::Observable {
     public:
         void SetEntities(std::shared_ptr<Storage<std::shared_ptr<Graphics::Shape>>>* entities) {
             mEntities = entities;
@@ -39,7 +21,7 @@ namespace VisualEditor {
         ImVec2 mScrSize{};
     };
 
-    class TreeView final : public IObserver {
+    class TreeView final : public Graphics::IObserver {
     public:
         TreeView(EntitiesModel* model) {
             mModel = model;

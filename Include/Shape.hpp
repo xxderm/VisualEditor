@@ -3,6 +3,24 @@
 
 namespace VisualEditor::Graphics {
 
+    class IObserver {
+    public:
+        virtual void Update() = 0;
+    };
+
+    class Observable {
+    public:
+        void AddObserver(IObserver* observer) {
+            mObservers.push_back(observer);
+        }
+        void NotifyUpdate() {
+            for (auto& obs : mObservers)
+                obs->Update();
+        }
+    private:
+        std::vector<IObserver*> mObservers;
+    };
+
     struct Quad {
         ImVec2 TopLeft{};
         ImVec2 TopRight{};
