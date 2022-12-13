@@ -20,26 +20,32 @@ namespace VisualEditor {
     public:
         CommandDispatcher() = default;
         void ExecuteCommand(std::shared_ptr<ICommand> cmd) {
+            mRedoStack = std::stack<std::shared_ptr<ICommand>>();
             cmd->Execute();
+            mUndoStack.push(cmd);
             mCommandStack.push(cmd);
         }
         void Undo() {
-            if (mCommandStack.size() > 0) {
-                mCommandStack.top()->Undo();
-                mCommandRedoStack.push(mCommandStack.top());
-                //mCommandStack.pop();
-            }
+            if (mUndoStack.empty())
+                return;
+            mUndoStack.top()->Undo();
+            mRedoStack.push(mUndoStack.top());
+            mUndoStack.pop();
+            mCommandStack.pop();
         }
         void Redo() {
-            if (mCommandRedoStack.size() > 0) {
-                mCommandRedoStack.top()->Redo();
-                mCommandRedoStack.pop();
-            }
+            if (mRedoStack.empty())
+                return;
+            mRedoStack.top()->Redo();
+            mUndoStack.push(mRedoStack.top());
+            mCommandStack.push(mRedoStack.top());
+            mRedoStack.pop();
         }
         std::stack<std::shared_ptr<ICommand>> GetStack() { return mCommandStack; }
     private:
+        std::stack<std::shared_ptr<ICommand>> mUndoStack;
+        std::stack<std::shared_ptr<ICommand>> mRedoStack;
         std::stack<std::shared_ptr<ICommand>> mCommandStack;
-        std::stack<std::shared_ptr<ICommand>> mCommandRedoStack;
     };
 
     class ShapeChangeColorCommand final : public ICommand {

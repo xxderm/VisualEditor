@@ -12,7 +12,9 @@ namespace VisualEditor {
             for (uint32_t i = 0; i < mEntities->Size(); i++) {
                 if ((*mEntities)[i]->IsSelected()) {
                     mCmdDispatcher.ExecuteCommand(
-                            std::make_shared<ShapeChangeColorCommand>((*mEntities)[i], ImVec4(r, g, b, 1.))
+                            std::make_shared<ShapeChangeColorCommand>(
+                                    (*mEntities)[i],
+                                    ImVec4(r, g, b, 1.))
                                     );
                 }
             }

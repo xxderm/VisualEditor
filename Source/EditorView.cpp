@@ -61,7 +61,7 @@ namespace VisualEditor {
             ImGui::TableSetBgColor(ImGuiTableBgTarget_::ImGuiTableBgTarget_CellBg,
                                    IM_COL32(81, 81, 81, 255));
             if (ImGui::ImageButton((ImTextureID)mLineIcon, ImVec2(20, 20)))
-                mOnAddCallBack(Graphics::ShapeType::LINE);
+                ;//mOnAddCallBack(Graphics::ShapeType::LINE);
             ImGui::SameLine();
             ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 5);
             ImGui::Text("Line");

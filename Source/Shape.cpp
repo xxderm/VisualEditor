@@ -27,8 +27,10 @@ namespace VisualEditor::Graphics {
         if (event->type == SDL_KEYDOWN)
             if (event->key.keysym.sym == SDLK_LSHIFT)
                 mShift = true;
-            if (event->key.keysym.sym == SDLK_ESCAPE)
+            if (event->key.keysym.sym == SDLK_ESCAPE) {
                 mSelected = false;
+                mIsFlex = false;
+            }
         if (event->type == SDL_KEYUP)
             if (event->key.keysym.sym == SDLK_LSHIFT)
                 mShift = false;
