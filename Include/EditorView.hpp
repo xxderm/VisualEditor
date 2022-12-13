@@ -70,7 +70,7 @@ namespace VisualEditor {
                     auto name = current->GetName() + "##" + std::to_string(i);
                     auto selected = current->IsSelected();
                     if (ImGui::Selectable(name.c_str(), selected)) {
-
+                        current->Select(!selected);
                     }
                 }
             }
@@ -92,7 +92,7 @@ namespace VisualEditor {
                 else {
                     auto name = sh[i]->GetName() + "##" + std::to_string(i);
                     if (ImGui::Selectable(name.c_str())) {
-
+                        sh[i]->Select(!sh[i]->IsSelected());
                     }
                 }
             }

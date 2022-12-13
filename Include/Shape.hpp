@@ -36,6 +36,7 @@ namespace VisualEditor::Graphics {
         virtual void Load(nlohmann::json* data, uint32_t* index) override;
         virtual void Save(nlohmann::json* data, uint32_t* index) override;
         void SetPos(ImVec2 pos) { mPosition = pos; }
+        void Select(bool status = true) { mSelected = status; }
         virtual std::string GetName() const { return "Shape"; }
         ImVec2 GetPosition() const { return mPosition; }
         ImVec4 GetColor() const { return mColor; }
