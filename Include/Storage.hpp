@@ -68,7 +68,7 @@ namespace VisualEditor {
         const T& operator[](uint32_t index) const { return mData[index]; }
         bool Empty() const { return mCurrent == 0; }
         uint32_t Size() const noexcept { return mCurrent; }
-        uint32_t Capacity() const noexcept { return mCapacityMemory; }
+        uint32_t Capacity() const noexcept { return mCapacity; }
     private:
         void Expand() {
             mCapacity *= 2;
