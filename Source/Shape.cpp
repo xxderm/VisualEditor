@@ -18,8 +18,10 @@ namespace VisualEditor::Graphics {
     }
 
     void Shape::OnEvent(SDL_Event *event, ImVec2 mousePos) {
+        // Изменение размера фигуры
         if (mIsFlex && mMousePressed)
             Amplify(mousePos);
+        // Вызов контекстного меню
         if (event->type == SDL_MOUSEBUTTONDOWN || event->type == SDL_MOUSEBUTTONUP) {
             if (event->button.button == SDL_BUTTON_RIGHT)
                 return;
@@ -35,6 +37,7 @@ namespace VisualEditor::Graphics {
             if (event->key.keysym.sym == SDLK_LSHIFT)
                 mShift = false;
         mHovered = IsMouseHover(mousePos);
+        // Если указатель в сцене [-1;1]
         if (event->type == SDL_MOUSEBUTTONDOWN &&
             ((mousePos.x > -1 && mousePos.x < 1) && (mousePos.y > -1 && mousePos.y < 1))
                 ) {

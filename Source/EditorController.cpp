@@ -83,8 +83,30 @@ namespace VisualEditor {
         auto scenePos = mEditorView->GetScenePos();
         auto sceneSize = mEditorView->GetSceneSize();
         auto pos = ImVec2(event->motion.x - scenePos.x, event->motion.y - scenePos.y);
+        // Координаты [-1;1]
         auto nx = (float)((float)pos.x / sceneSize.x) * 2.f - 1.f;
         auto ny = (float)((float)-pos.y / sceneSize.y) * 2.f + 1.f;
+        // TODO: -ny
+
+        // TODO: Сделать враппер выделенной фигуры
+        // TODO: Трансформации над выбранной фигурой
+        if (event->type == SDL_MOUSEBUTTONDOWN &&
+            ((nx > -1 && nx < 1) && (ny > -1 && ny < 1))
+                ) {
+            mMousePressed = true;
+            //if (mHovered)
+                mDeltaDiff = ImVec2(mPosition.x - mousePos.x, mPosition.y - mousePos.y);
+        }
+        if (event->type == SDL_MOUSEBUTTONUP) {
+            mMousePressed = false;
+            mDeltaDiff = {};
+        }
+        if (event->type == SDL_MOUSEMOTION) {
+            auto normalizePosition = ImVec2(mousePos.x + mDeltaDiff.x, mousePos.y + mDeltaDiff.y);
+            if (mMousePressed && mHovered && !CheckBounds(normalizePosition) ) {
+                this->Move(normalizePosition);
+            }
+        }
         for (uint32_t i = 0; i < mEntities->Size(); i++) {
             (*mEntities)[i]->OnEvent(event, ImVec2(nx, -ny));
             if ((*mEntities)[i]->IsInFlexBorder(ImVec2(nx, -ny)))

@@ -17,12 +17,13 @@ namespace VisualEditor {
     private:
         EditorViewPtr mEditorView;
         std::shared_ptr<Storage<std::shared_ptr<Graphics::Shape>>> mEntities;
-        //std::vector<std::shared_ptr<ICommand>> mActions;
         CommandDispatcher mCmdDispatcher;
         ImVec2 mScrSize;
         SDL_SystemCursor mCursor = SDL_SYSTEM_CURSOR_ARROW;
         EntitiesModel mEntityModel;
         std::shared_ptr<TreeView> mTreeView;
+        bool mMousePressed = false;
+        ImVec2 mDeltaDiff{};
     };
 
 }
