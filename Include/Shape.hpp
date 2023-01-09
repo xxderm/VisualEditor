@@ -50,6 +50,7 @@ namespace VisualEditor::Graphics {
         virtual void Move(ImVec2 delta) = 0;
         virtual bool IsMouseHover(ImVec2 mousePos) = 0;
         virtual Shape* Copy() = 0;
+        virtual ImVec2 GetSize() = 0;
         virtual void SetColor(ImVec4 color) { mColor = color; }
         virtual void Load(nlohmann::json* data, uint32_t* index) override;
         virtual void Save(nlohmann::json* data, uint32_t* index) override;

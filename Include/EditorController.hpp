@@ -23,6 +23,7 @@ namespace VisualEditor {
         EntitiesModel mEntityModel;
         std::shared_ptr<TreeView> mTreeView;
         bool mMousePressed = false;
+        bool mShift = false;
         ImVec2 mDeltaDiff{};
     };
 

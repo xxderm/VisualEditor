@@ -88,8 +88,30 @@ namespace VisualEditor {
         auto ny = (float)((float)-pos.y / sceneSize.y) * 2.f + 1.f;
         // TODO: -ny
 
+        if (event->type == SDL_MOUSEBUTTONDOWN && ((nx > -1 && nx < 1) && (-ny > -1 && -ny < 1))) {
+            mMousePressed = true;
+        }
+
+        if (event->type == SDL_MOUSEBUTTONUP) {
+            mMousePressed = false;
+            mDeltaDiff = {};
+        }
+
+        for (size_t i = 0; i < mEntities->Size(); ++i) {
+            if (mEntities->At(i)->IsMouseHover(ImVec2(nx, -ny)) && mMousePressed) {
+                auto& shape = mEntities->At(i);
+                auto selected = std::make_shared<Graphics::SelectedShape>(shape);
+                mEntities->Remove(i);
+                mEntities->Push(selected);
+            }
+        }
+
+
+
+
         // TODO: Сделать враппер выделенной фигуры
         // TODO: Трансформации над выбранной фигурой
+        /*
         if (event->type == SDL_MOUSEBUTTONDOWN &&
             ((nx > -1 && nx < 1) && (ny > -1 && ny < 1))
                 ) {
@@ -112,7 +134,7 @@ namespace VisualEditor {
             if ((*mEntities)[i]->IsInFlexBorder(ImVec2(nx, -ny)))
                 mCursor = SDL_SYSTEM_CURSOR_SIZEWE;
         }
-
+*/
     }
 
     void EditorController::Save(std::string project) {

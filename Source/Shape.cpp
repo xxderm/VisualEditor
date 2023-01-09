@@ -18,6 +18,7 @@ namespace VisualEditor::Graphics {
     }
 
     void Shape::OnEvent(SDL_Event *event, ImVec2 mousePos) {
+        /*
         // Изменение размера фигуры
         if (mIsFlex && mMousePressed)
             Amplify(mousePos);
@@ -26,13 +27,14 @@ namespace VisualEditor::Graphics {
             if (event->button.button == SDL_BUTTON_RIGHT)
                 return;
         }
-        if (event->type == SDL_KEYDOWN)
+        if (event->type == SDL_KEYDOWN) {
             if (event->key.keysym.sym == SDLK_LSHIFT)
                 mShift = true;
             if (event->key.keysym.sym == SDLK_ESCAPE) {
                 mSelected = false;
                 mIsFlex = false;
             }
+        }
         if (event->type == SDL_KEYUP)
             if (event->key.keysym.sym == SDLK_LSHIFT)
                 mShift = false;
@@ -58,6 +60,7 @@ namespace VisualEditor::Graphics {
                 this->Move(normalizePosition);
             }
         }
+         */
     }
 
     Shape::Shape(const Shape& other) {
