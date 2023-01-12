@@ -5,10 +5,6 @@ namespace VisualEditor {
 
         void TriangleShape::Render() {
             GraphicUtility::TriangleEdge(mPosition, mSize, mColor);
-            if (mHovered)
-                GraphicUtility::TriangleEdge(mPosition, mSize + 0.01, ImVec4(1, 1, 0.6, 1));
-            if (mSelected)
-                GraphicUtility::Grid(mPosition, mSize * 2.02);
         }
 
         float TriangleShape::Sign(ImVec2 p1, ImVec2 p2, ImVec2 p3) {
@@ -44,10 +40,6 @@ namespace VisualEditor {
             copy->mPosition = this->mPosition;
             copy->mColor = this->mColor;
             return copy;
-        }
-
-        void TriangleShape::Move(ImVec2 delta) {
-            mPosition = delta;
         }
 
         bool TriangleShape::IsInFlexBorder(ImVec2 mouse) {

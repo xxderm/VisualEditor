@@ -11,12 +11,12 @@ namespace VisualEditor::Graphics {
         void Render() override;
         void Load(nlohmann::json* data, uint32_t* index) override;
         void Save(nlohmann::json* data, uint32_t* index) override;
+        void Move(ImVec2 delta) override;
         ImVec2 GetSize() override { return ImVec2(GetQuadSize().z, GetQuadSize().w); };
         bool IsMouseHover(ImVec2 mousePos) override;
         bool IsInFlexBorder(ImVec2 mouse) override;
         void Amplify(ImVec2 mouse) override;
         void Flex(double dist) override;
-        void Move(ImVec2 delta) override;
         std::string GetName() const override { return "GroupShape"; }
         Storage<Shape*> GetEntities() { return mEntities; }
         void SetColor(ImVec4 color) override {

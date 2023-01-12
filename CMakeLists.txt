@@ -8,7 +8,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 # Src
 file(GLOB_RECURSE sources CONFIGURE_DEPENDS "Source/*.cpp")
-include_directories(Include)
+include_directories(Include/)
 
 # Vendor
 include_directories("Vendor/sdl/vc/include/")

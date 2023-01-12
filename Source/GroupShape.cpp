@@ -4,8 +4,6 @@ namespace VisualEditor::Graphics {
 
     void GroupShape::Render() {
         auto points = GetQuadSize();
-        if (mHovered || mSelected)
-            GraphicUtility::Grid(ImVec2(points.x, points.y), ImVec2(points.z, points.w));
         if (mEntities.Size() > 0) {
             for (uint32_t i = 0; i < mEntities.Size(); i++)
                 (mEntities)[i]->Render();
@@ -60,14 +58,15 @@ namespace VisualEditor::Graphics {
 
     void GroupShape::Move(ImVec2 delta) {
         for (uint32_t i = 0; i < mEntities.Size(); i++) {
-            auto currentPosition = mEntities[i]->GetPosition();
-            auto deltaDiff = ImVec2(currentPosition.x - mPosition.x, currentPosition.y - mPosition.y);
-            mEntities[i]->Move(ImVec2(delta.x + deltaDiff.x, delta.y + deltaDiff.y));
+            //auto currentPosition = mEntities[i]->GetPosition();
+            //auto deltaDiff = ImVec2(currentPosition.x - mPosition.x, currentPosition.y - mPosition.y);
+            //mEntities[i]->Move(ImVec2(delta.x + deltaDiff.x, delta.y + deltaDiff.y));
+            mEntities[i]->Move(delta);
         }
         // TODO: исправить тремор
-        auto points = GetQuadSize();
-        mPosition = ImVec2(points.x, points.y);
-        mSize = ImVec2(points.z, points.w);
+        //auto points = GetQuadSize();
+        //mPosition = ImVec2(points.x, points.y);
+        //mSize = ImVec2(points.z, points.w);
     }
 
     GroupShape::~GroupShape() {

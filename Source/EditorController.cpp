@@ -23,8 +23,9 @@ namespace VisualEditor {
             std::vector<uint32_t> indicesToErase;
             auto gs = Graphics::ShapeFactory::CreateShape(Graphics::ShapeType::GROUP);
             for (uint32_t i = 0; i < mEntities->Size(); i++) {
-                if ((*mEntities)[i]->IsSelected()) {
-                    ((Graphics::GroupShape*)gs.get())->Add((*mEntities)[i]->Copy());
+                if ( mEntities->At(i)->GetName() == "SelectedShape" ) {
+                    auto wrapped = dynamic_cast<Graphics::SelectedShape*>(mEntities->At(i).get());
+                    ((Graphics::GroupShape*)gs.get())->Add(wrapped->Copy());
                     indicesToErase.push_back(i);
                 }
             }
@@ -35,7 +36,7 @@ namespace VisualEditor {
         mEditorView->OnDelete([this]() {
             std::vector<uint32_t> indicesToErase;
             for (uint32_t i = 0; i < mEntities->Size(); i++) {
-                if ((*mEntities)[i]->IsSelected())
+                if (mEntities->At(i)->GetName() == "SelectedShape")
                     indicesToErase.push_back(i);
             }
             for (auto ind : indicesToErase)
@@ -44,9 +45,11 @@ namespace VisualEditor {
         mEditorView->OnUnGroup([this]() {
             std::vector<uint32_t> indicesToErase;
             for (uint32_t i = 0; i < mEntities->Size(); i++) {
-                if ((*mEntities)[i]->IsSelected()) {
+                if (mEntities->At(i)->GetName() == "SelectedShape") {
                     indicesToErase.push_back(i);
-                    auto entities = ((Graphics::GroupShape*)(*mEntities)[i].get())->GetEntities();
+                    auto wrapped = dynamic_cast<Graphics::SelectedShape*>(mEntities->At(i).get());
+                    auto extracted = dynamic_cast<Graphics::GroupShape*>(wrapped->Extract()->Copy());
+                    auto entities = extracted->GetEntities();
                     for (uint32_t j = 0; j < entities.Size(); ++j) {
                         mEntities->Push(std::shared_ptr<Graphics::Shape>(entities[j]));
                     }
@@ -87,53 +90,79 @@ namespace VisualEditor {
         auto nx = (float)((float)pos.x / sceneSize.x) * 2.f - 1.f;
         auto ny = (float)((float)-pos.y / sceneSize.y) * 2.f + 1.f;
         // TODO: -ny
+        auto inScene = ((nx > -1 && nx < 1) && (-ny > -1 && -ny < 1));
 
-        if (event->type == SDL_MOUSEBUTTONDOWN && ((nx > -1 && nx < 1) && (-ny > -1 && -ny < 1))) {
-            mMousePressed = true;
-        }
-
-        if (event->type == SDL_MOUSEBUTTONUP) {
+        if (event->type == SDL_MOUSEBUTTONUP && inScene) {
+            // TODO: Команда на перемещение фигуры
             mMousePressed = false;
-            mDeltaDiff = {};
         }
 
-        for (size_t i = 0; i < mEntities->Size(); ++i) {
-            if (mEntities->At(i)->IsMouseHover(ImVec2(nx, -ny)) && mMousePressed) {
-                auto& shape = mEntities->At(i);
-                auto selected = std::make_shared<Graphics::SelectedShape>(shape);
-                mEntities->Remove(i);
-                mEntities->Push(selected);
+        // Keys Down
+        if (event->type == SDL_KEYDOWN) {
+            if (event->key.keysym.sym == SDLK_LSHIFT)
+                mShift = true;
+            if (event->key.keysym.sym == SDLK_ESCAPE) {
+                // TODO: Escape
+                for (size_t i = 0; i < mEntities->Size(); ++i) {
+                    if (mEntities->At(i)->GetName() == "SelectedShape") {
+                        auto wrapped = dynamic_cast<Graphics::SelectedShape*>(mEntities->At(i).get());
+                        mEntities->Replace(i, wrapped->Extract());
+                    }
+                }
+            }
+        }
+        // Keys Up
+        if (event->type == SDL_KEYUP) {
+            if (event->key.keysym.sym == SDLK_LSHIFT) {
+                mShift = false;
             }
         }
 
-        // TODO: Команда на перемещение фигуры
+        if (event->type == SDL_MOUSEBUTTONDOWN && inScene) {
+            mMousePressed = true;
+            mBeginMousePos = ImVec2(nx, -ny);
+            mMotionPrev = { -1, -1 };
+            for (size_t i = 0; i < mEntities->Size(); ++i) {
+                if (mEntities->At(i)->GetName() == "SelectedShape") continue;
+                if (mEntities->At(i)->IsMouseHover(ImVec2(nx, -ny)) && mMousePressed && mShift) {
+                    const auto& shape = mEntities->At(i);
+                    const auto& selected = std::make_shared<Graphics::SelectedShape>(shape);
+                    mEntities->Replace(i, selected);
+                }
+            }
+        }
 
+        if (event->type == SDL_MOUSEMOTION && inScene && mMousePressed) {
+            ImVec2 delta = { 0,  0};
+            if (mMotionPrev.x != -1) {
+                delta = {-(mMotionPrev.x - nx), -ny - mMotionPrev.y};
+                mMotionPrev = {nx, -ny};
+            }
+            else {
+                mMotionPrev = mBeginMousePos;
+                delta = { nx - mBeginMousePos.x, -ny - mBeginMousePos.y };
+                if (nx == mMotionPrev.x && -ny == mMotionPrev.y) delta = { 0, 0 };
+            }
+            bool block = false;
+            ImVec2 nextPos{};
+            for (int i = 0; i < mEntities->Size(); ++i) {
+                auto shapePos = mEntities->At(i)->GetPosition();
+                nextPos = { shapePos.x + delta.x, shapePos.y + delta.y };
+                if (mEntities->At(i)->CheckBounds(nextPos)) block = true;
+            }
+            for (int i = 0; i < mEntities->Size(); ++i) {
+                if (mEntities->At(i)->GetName() == "SelectedShape" && !block) {
+                    mEntities->At(i)->Move(delta);
+                }
+            }
+        }
 
-        // TODO: Сделать враппер выделенной фигуры
-        // TODO: Трансформации над выбранной фигурой
         /*
-        if (event->type == SDL_MOUSEBUTTONDOWN &&
-            ((nx > -1 && nx < 1) && (ny > -1 && ny < 1))
-                ) {
-            mMousePressed = true;
-            //if (mHovered)
-                mDeltaDiff = ImVec2(mPosition.x - mousePos.x, mPosition.y - mousePos.y);
-        }
-        if (event->type == SDL_MOUSEBUTTONUP) {
-            mMousePressed = false;
-            mDeltaDiff = {};
-        }
-        if (event->type == SDL_MOUSEMOTION) {
-            auto normalizePosition = ImVec2(mousePos.x + mDeltaDiff.x, mousePos.y + mDeltaDiff.y);
-            if (mMousePressed && mHovered && !CheckBounds(normalizePosition) ) {
-                this->Move(normalizePosition);
-            }
-        }
-        for (uint32_t i = 0; i < mEntities->Size(); i++) {
-            (*mEntities)[i]->OnEvent(event, ImVec2(nx, -ny));
-            if ((*mEntities)[i]->IsInFlexBorder(ImVec2(nx, -ny)))
-                mCursor = SDL_SYSTEM_CURSOR_SIZEWE;
-        }
+for (uint32_t i = 0; i < mEntities->Size(); i++) {
+    (*mEntities)[i]->OnEvent(event, ImVec2(nx, -ny));
+    if ((*mEntities)[i]->IsInFlexBorder(ImVec2(nx, -ny)))
+        mCursor = SDL_SYSTEM_CURSOR_SIZEWE;
+}
 */
     }
 

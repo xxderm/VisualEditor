@@ -4,11 +4,6 @@ namespace VisualEditor::Graphics {
 
     void CircleShape::Render() {
         GraphicUtility::CircleEdge(mPosition, mRadius, mColor);
-        if (mHovered)
-            GraphicUtility::CircleEdge(mPosition, mRadius + 0.005, ImVec4(1, 1, 0.6, 1));
-        if (mSelected)
-            GraphicUtility::Grid(mPosition, mRadius * 2.015);
-
     }
 
     Quad CircleShape::GetBounds(ImVec2 pos) {
@@ -32,10 +27,6 @@ namespace VisualEditor::Graphics {
         copy->mPosition = this->mPosition;
         copy->mColor = this->mColor;
         return copy;
-    }
-
-    void CircleShape::Move(ImVec2 delta) {
-        mPosition = delta;
     }
 
     bool CircleShape::IsInFlexBorder(ImVec2 mouse) {

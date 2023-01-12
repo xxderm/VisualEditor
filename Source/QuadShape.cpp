@@ -5,8 +5,6 @@ namespace VisualEditor{
 
         void QuadShape::Render() {
             GraphicUtility::QuadEdge(mPosition, mSize, mColor);
-            if (mHovered || mSelected)
-                GraphicUtility::QuadEdge(mPosition, ImVec2(mSize.x + 0.015, mSize.y + 0.015), ImVec4(1, 1, 0.6, 1));
         }
 
         Quad QuadShape::GetBounds(ImVec2 pos) {
@@ -30,10 +28,6 @@ namespace VisualEditor{
             copy->mPosition = this->mPosition;
             copy->mColor = this->mColor;
             return copy;
-        }
-
-        void QuadShape::Move(ImVec2 delta) {
-            mPosition = delta;
         }
 
         bool QuadShape::IsInFlexBorder(ImVec2 mouse) {

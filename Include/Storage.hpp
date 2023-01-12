@@ -1,5 +1,6 @@
 #pragma once
-#include "pch.hpp"
+#include <cstdint>
+#include <memory>
 
 namespace VisualEditor {
 
@@ -52,6 +53,10 @@ namespace VisualEditor {
                 other.mCurrent = other.mCapacity = 0;
             }
             return *this;
+        }
+        void Replace(uint32_t index, const T& value) {
+            // TODO: Удалить объект и заменить
+            mData[index] = value;
         }
         void Push(const T& value) {
             if (mCurrent >= mCapacity) Expand();

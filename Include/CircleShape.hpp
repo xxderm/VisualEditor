@@ -12,7 +12,6 @@ namespace VisualEditor::Graphics {
         ImVec2 GetSize() override { return ImVec2(mRadius, mRadius); };
         std::string GetName() const override { return "CircleShape"; }
         bool IsMouseHover(ImVec2 mousePos) override;
-        void Move(ImVec2 delta) override;
         Quad GetBounds(ImVec2 pos) override;
         bool IsInFlexBorder(ImVec2 mouse) override;
         void Amplify(ImVec2 mouse) override;

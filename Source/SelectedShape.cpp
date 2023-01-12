@@ -5,8 +5,9 @@
 namespace VisualEditor {
     namespace Graphics {
 
-        SelectedShape::SelectedShape(std::shared_ptr<Shape> shape) {
-            mShape = std::move(shape);
+        SelectedShape::SelectedShape(const std::shared_ptr<Shape>& shape) {
+            mShape = shape;
+            this->mPosition = shape->GetPosition();
         }
 
         void SelectedShape::Render() {
@@ -43,10 +44,6 @@ namespace VisualEditor {
 
         Quad SelectedShape::GetBounds(ImVec2 pos) {
             return mShape->GetBounds(pos);
-        }
-
-        void SelectedShape::Move(ImVec2 delta) {
-            mShape->Move(delta);
         }
 
         Shape *SelectedShape::Copy() {

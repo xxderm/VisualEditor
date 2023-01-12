@@ -1,5 +1,6 @@
 #pragma once
 #include "EditorView.hpp"
+#include <Storage.hpp>
 
 namespace VisualEditor {
 
@@ -24,7 +25,8 @@ namespace VisualEditor {
         std::shared_ptr<TreeView> mTreeView;
         bool mMousePressed = false;
         bool mShift = false;
-        ImVec2 mDeltaDiff{};
+        ImVec2 mBeginMousePos{};
+        ImVec2 mMotionPrev {-1, -1};
     };
 
 }

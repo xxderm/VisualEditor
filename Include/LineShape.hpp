@@ -17,7 +17,6 @@ namespace VisualEditor {
             void Flex(double dist) override {}
             std::string GetName() const override { return "LineShape"; }
             Quad GetBounds(ImVec2 pos) override{ return Quad();}
-            void Move(ImVec2 delta) override{}
             Shape* Copy() override {}
         private:
             ImVec2 mPointBegin;

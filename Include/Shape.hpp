@@ -47,7 +47,12 @@ namespace VisualEditor::Graphics {
         Shape(const Shape& other);
         virtual void Render() = 0;
         void OnEvent(SDL_Event *event, ImVec2 mousePos);
-        virtual void Move(ImVec2 delta) = 0;
+        virtual void Move(ImVec2 delta) {
+            //ImVec2 tmp = { mPosition.x + delta.x, mPosition.y + delta.y };
+            //if (CheckBounds(tmp)) return;
+            mPosition.x += delta.x;
+            mPosition.y += delta.y;
+        };
         virtual bool IsMouseHover(ImVec2 mousePos) = 0;
         virtual Shape* Copy() = 0;
         virtual ImVec2 GetSize() = 0;
@@ -62,7 +67,6 @@ namespace VisualEditor::Graphics {
         bool IsSelected() const { return mSelected; }
         virtual ~Shape() = default;
         virtual Quad GetBounds(ImVec2 pos) = 0;
-    protected:
         bool CheckBounds(ImVec2 pos);
     protected:
         ImVec2 mPosition = ImVec2(0, 0);

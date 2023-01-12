@@ -17,7 +17,6 @@ namespace VisualEditor {
             void Flex(double dist) override;
             std::string GetName() const override { return "TriangleShape"; }
             Quad GetBounds(ImVec2 pos) override;
-            void Move(ImVec2 delta) override;
             Shape* Copy() override;
         private:
             float Sign(ImVec2 p1, ImVec2 p2, ImVec2 p3);
