@@ -48,8 +48,6 @@ namespace VisualEditor::Graphics {
         virtual void Render() = 0;
         void OnEvent(SDL_Event *event, ImVec2 mousePos);
         virtual void Move(ImVec2 delta) {
-            //ImVec2 tmp = { mPosition.x + delta.x, mPosition.y + delta.y };
-            //if (CheckBounds(tmp)) return;
             mPosition.x += delta.x;
             mPosition.y += delta.y;
         };

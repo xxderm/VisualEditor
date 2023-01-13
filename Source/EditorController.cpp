@@ -117,7 +117,16 @@ namespace VisualEditor {
                 mShift = false;
             }
         }
-
+        for (size_t i = 0; i < mEntities->Size(); ++i) {
+            if (mEntities->At(i)->IsInFlexBorder(ImVec2(nx, -ny)) &&
+                mEntities->At(i)->GetName() == "SelectedShape") {
+                mCursor = SDL_SYSTEM_CURSOR_SIZEWE;
+                if (mMousePressed) {
+                    mEntities->At(i)->Amplify(ImVec2(nx, -ny));
+                    return;
+                }
+            }
+        }
         if (event->type == SDL_MOUSEBUTTONDOWN && inScene) {
             mMousePressed = true;
             mBeginMousePos = ImVec2(nx, -ny);
@@ -157,13 +166,6 @@ namespace VisualEditor {
             }
         }
 
-        /*
-for (uint32_t i = 0; i < mEntities->Size(); i++) {
-    (*mEntities)[i]->OnEvent(event, ImVec2(nx, -ny));
-    if ((*mEntities)[i]->IsInFlexBorder(ImVec2(nx, -ny)))
-        mCursor = SDL_SYSTEM_CURSOR_SIZEWE;
-}
-*/
     }
 
     void EditorController::Save(std::string project) {

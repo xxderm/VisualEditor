@@ -2,8 +2,7 @@
 
 #include <utility>
 
-namespace VisualEditor {
-    namespace Graphics {
+namespace VisualEditor::Graphics {
 
         SelectedShape::SelectedShape(const std::shared_ptr<Shape>& shape) {
             mShape = shape;
@@ -13,7 +12,7 @@ namespace VisualEditor {
         void SelectedShape::Render() {
             mShape->Render();
             auto size = mShape->GetSize();
-            GraphicUtility::Grid(mPosition, size.x * 2.015);
+            GraphicUtility::Grid(mPosition, size.x * 2.09);
         }
 
         void SelectedShape::Load(nlohmann::json *data, uint32_t *index) {
@@ -51,4 +50,3 @@ namespace VisualEditor {
         }
 
     }
-}
