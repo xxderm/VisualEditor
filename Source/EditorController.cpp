@@ -10,7 +10,7 @@ namespace VisualEditor {
         });
         mEditorView->OnChangeColor([this](float r, float g, float b) {
             for (uint32_t i = 0; i < mEntities->Size(); i++) {
-                if ((*mEntities)[i]->IsSelected()) {
+                if (mEntities->At(i)->GetName() == "SelectedShape") {
                     mCmdDispatcher.ExecuteCommand(
                             std::make_shared<ShapeChangeColorCommand>(
                                     (*mEntities)[i],
@@ -120,6 +120,8 @@ namespace VisualEditor {
         for (size_t i = 0; i < mEntities->Size(); ++i) {
             if (mEntities->At(i)->IsInFlexBorder(ImVec2(nx, -ny)) &&
                 mEntities->At(i)->GetName() == "SelectedShape") {
+                auto wrapped = reinterpret_cast<Graphics::SelectedShape*>(mEntities->At(i).get())->Extract()->GetName();
+                if (wrapped == "GroupShape") continue;
                 mCursor = SDL_SYSTEM_CURSOR_SIZEWE;
                 if (mMousePressed) {
                     mEntities->At(i)->Amplify(ImVec2(nx, -ny));

@@ -10,6 +10,7 @@ namespace VisualEditor {
             void Render() override;
             void Load(nlohmann::json* data, uint32_t* index) override;
             void Save(nlohmann::json* data, uint32_t* index) override;
+            void SetColor(ImVec4 color) override { mShape->SetColor(color); }
             void Move(ImVec2 delta) override { mShape->Move(delta); Shape::Move(delta); }
             ImVec2 GetSize() override { return mShape->GetSize(); };
             bool IsMouseHover(ImVec2 mousePos) override;
