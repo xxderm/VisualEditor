@@ -41,6 +41,7 @@ namespace VisualEditor {
                 if (current->GetName() == "GroupShape") {
                     auto name = "GroupShape##" + std::to_string(i);
                     auto currentEntitiesGroup = ((Graphics::GroupShape*)(*entities->get())[i].get())->GetEntities();
+                    // TODO: Update to SelectedShape
                     auto selected = current->IsSelected();
                     if (ImGui::TreeNodeEx(name.c_str(),
                             selected ? ImGuiTreeNodeFlags_Selected | ImGuiTreeNodeFlags_DefaultOpen : 0)) {
@@ -50,7 +51,7 @@ namespace VisualEditor {
                 }
                 else {
                     auto name = current->GetName() + "##" + std::to_string(i);
-                    auto selected = current->IsSelected();
+                    auto selected = current->GetName() == "SelectedShape";
                     if (ImGui::Selectable(name.c_str(), selected)) {
                         current->Select(!selected);
                     }

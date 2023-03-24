@@ -16,6 +16,9 @@ namespace VisualEditor {
         void Save(std::string project);
         void Load(std::string project);
     private:
+        void UnselectAll();
+        void DeleteSelected();
+    private:
         EditorViewPtr mEditorView;
         std::shared_ptr<Storage<std::shared_ptr<Graphics::Shape>>> mEntities;
         CommandDispatcher mCmdDispatcher;
@@ -25,6 +28,7 @@ namespace VisualEditor {
         std::shared_ptr<TreeView> mTreeView;
         bool mMousePressed = false;
         bool mShift = false;
+        bool mCtrl = false;
         ImVec2 mBeginMousePos{};
         ImVec2 mMotionPrev {-1, -1};
     };

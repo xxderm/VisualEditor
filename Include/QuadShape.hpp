@@ -10,7 +10,7 @@ namespace VisualEditor {
             void Render() override;
             void Load(nlohmann::json* data, uint32_t* index) override;
             void Save(nlohmann::json* data, uint32_t* index) override;
-            ImVec2 GetSize() override { return ImVec2(mSize.x / 2., mSize.y / 2.); };
+            ImVec2 GetSize() override { return ImVec2(mSize.x, mSize.y); };
             bool IsMouseHover(ImVec2 mousePos) override;
             bool IsInFlexBorder(ImVec2 mouse) override;
             void Amplify(ImVec2 mouse) override;

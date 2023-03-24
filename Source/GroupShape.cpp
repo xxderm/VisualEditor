@@ -63,6 +63,8 @@ namespace VisualEditor::Graphics {
             //mEntities[i]->Move(ImVec2(delta.x + deltaDiff.x, delta.y + deltaDiff.y));
             mEntities[i]->Move(delta);
         }
+        Shape::Move(delta);
+
         // TODO: исправить тремор
         //auto points = GetQuadSize();
         //mPosition = ImVec2(points.x, points.y);

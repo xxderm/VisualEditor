@@ -37,6 +37,10 @@ namespace VisualEditor::Graphics {
 
     class IMemorable {
     public:
+        // TODO: index fix
+        // TODO: Group save
+        // TODO: 8 lab
+        // TODO: Make abstract shape fabric
         virtual void Load(nlohmann::json* data, uint32_t* index) = 0;
         virtual void Save(nlohmann::json* data, uint32_t* index) = 0;
     };

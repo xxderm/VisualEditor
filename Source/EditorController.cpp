@@ -3,7 +3,7 @@
 namespace VisualEditor {
 
     EditorController::EditorController(SDL_Window* window) {
-        mEntities = std::make_shared<Storage<std::shared_ptr<Graphics::Shape>>>();
+        mEntities = std::make_shared<Storage<std::shared_ptr<Graphics::Shape>>>(100);
         mEditorView = std::make_shared<EditorView>(window);
         mEditorView->OnAddShape([this](Graphics::ShapeType type) {
             mCmdDispatcher.ExecuteCommand(std::make_shared<AddShapeCommand>(mEntities, type));
@@ -20,33 +20,22 @@ namespace VisualEditor {
             }
         });
         mEditorView->OnMakeGroup([this]() {
-            std::vector<uint32_t> indicesToErase;
             auto gs = Graphics::ShapeFactory::CreateShape(Graphics::ShapeType::GROUP);
             for (uint32_t i = 0; i < mEntities->Size(); i++) {
                 if ( mEntities->At(i)->GetName() == "SelectedShape" ) {
-                    auto wrapped = dynamic_cast<Graphics::SelectedShape*>(mEntities->At(i).get());
+                    auto wrapped = ((Graphics::SelectedShape*)mEntities->At(i).get())->Extract();
                     ((Graphics::GroupShape*)gs.get())->Add(wrapped->Copy());
-                    indicesToErase.push_back(i);
                 }
             }
-            for (auto ind : indicesToErase)
-                mEntities->Remove(ind);
+            DeleteSelected();
             mEntities->Push(gs);
         });
         mEditorView->OnDelete([this]() {
-            std::vector<uint32_t> indicesToErase;
-            for (uint32_t i = 0; i < mEntities->Size(); i++) {
-                if (mEntities->At(i)->GetName() == "SelectedShape")
-                    indicesToErase.push_back(i);
-            }
-            for (auto ind : indicesToErase)
-                mEntities->Remove(ind);
+            DeleteSelected();
         });
         mEditorView->OnUnGroup([this]() {
-            std::vector<uint32_t> indicesToErase;
             for (uint32_t i = 0; i < mEntities->Size(); i++) {
                 if (mEntities->At(i)->GetName() == "SelectedShape") {
-                    indicesToErase.push_back(i);
                     auto wrapped = dynamic_cast<Graphics::SelectedShape*>(mEntities->At(i).get());
                     auto extracted = dynamic_cast<Graphics::GroupShape*>(wrapped->Extract()->Copy());
                     auto entities = extracted->GetEntities();
@@ -55,8 +44,7 @@ namespace VisualEditor {
                     }
                 }
             }
-            for (auto ind : indicesToErase)
-                mEntities->Remove(ind);
+            DeleteSelected();
         });
         mEditorView->OnUndo([this]() {
             mCmdDispatcher.Undo();
@@ -78,7 +66,6 @@ namespace VisualEditor {
         mEditorView->Render(window);
         mEntityModel.SetEntities(&mEntities);
         mEntityModel.SetScrSize(ImVec2(ww, wh));
-
     }
 
     void EditorController::OnEvent(SDL_Event *event) {
@@ -101,14 +88,11 @@ namespace VisualEditor {
         if (event->type == SDL_KEYDOWN) {
             if (event->key.keysym.sym == SDLK_LSHIFT)
                 mShift = true;
+            if (event->key.keysym.sym == SDLK_LCTRL)
+                mCtrl = true;
             if (event->key.keysym.sym == SDLK_ESCAPE) {
                 // TODO: Escape
-                for (size_t i = 0; i < mEntities->Size(); ++i) {
-                    if (mEntities->At(i)->GetName() == "SelectedShape") {
-                        auto wrapped = dynamic_cast<Graphics::SelectedShape*>(mEntities->At(i).get());
-                        mEntities->Replace(i, wrapped->Extract());
-                    }
-                }
+                UnselectAll();
             }
         }
         // Keys Up
@@ -116,9 +100,11 @@ namespace VisualEditor {
             if (event->key.keysym.sym == SDLK_LSHIFT) {
                 mShift = false;
             }
+            if (event->key.keysym.sym == SDLK_LCTRL)
+                mCtrl = false;
         }
         for (size_t i = 0; i < mEntities->Size(); ++i) {
-            if (mEntities->At(i)->IsInFlexBorder(ImVec2(nx, -ny)) &&
+            if (mCtrl && mEntities->At(i)->IsInFlexBorder(ImVec2(nx, -ny)) &&
                 mEntities->At(i)->GetName() == "SelectedShape") {
                 auto wrapped = reinterpret_cast<Graphics::SelectedShape*>(mEntities->At(i).get())->Extract()->GetName();
                 if (wrapped == "GroupShape") continue;
@@ -130,6 +116,9 @@ namespace VisualEditor {
             }
         }
         if (event->type == SDL_MOUSEBUTTONDOWN && inScene) {
+            if (event->button.button == SDL_BUTTON_RIGHT) {
+                return;
+            }
             mMousePressed = true;
             mBeginMousePos = ImVec2(nx, -ny);
             mMotionPrev = { -1, -1 };
@@ -202,6 +191,26 @@ namespace VisualEditor {
             if (shapeTitle == "QuadShape")
                 mEntities->Push(Graphics::ShapeFactory::CreateShape(Graphics::ShapeType::QUAD));
             mEntities->Back()->Load(&data, &i);
+        }
+    }
+
+    void EditorController::UnselectAll() {
+        for (size_t i = 0; i < mEntities->Size(); ++i) {
+            if (mEntities->At(i)->GetName() == "SelectedShape") {
+                auto wrapped = dynamic_cast<Graphics::SelectedShape*>(mEntities->At(i).get());
+                mEntities->Replace(i, wrapped->Extract());
+            }
+        }
+    }
+
+    void EditorController::DeleteSelected() {
+        int currSize = mEntities->Size();
+        for (int i = 0; i < currSize; ) {
+            if (mEntities->At(i)->GetName() == "SelectedShape") {
+                mEntities->Remove(i);
+                i = 0;
+                currSize = mEntities->Size();
+            } else ++i;
         }
     }
 

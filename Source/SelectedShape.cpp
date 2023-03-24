@@ -12,9 +12,9 @@ namespace VisualEditor::Graphics {
         void SelectedShape::Render() {
             mShape->Render();
             auto size = mShape->GetSize();
-            if (mShape->GetName() != "GroupShape" && mShape->GetName() != "SelectedShape")
-                size.x *= 2.09;
-            GraphicUtility::Grid(mPosition, size.x);
+            size.x *= 1.1;
+            size.y *= 1.1;
+            GraphicUtility::Grid(mPosition, size);
         }
 
         void SelectedShape::Load(nlohmann::json *data, uint32_t *index) {

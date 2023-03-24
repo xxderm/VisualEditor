@@ -11,13 +11,13 @@ namespace VisualEditor {
             void Save(nlohmann::json* data, uint32_t* index) override {}
             ImVec2 GetSize() override { return ImVec2(0, 0); };
             void Render() override;
-            bool IsMouseHover(ImVec2 mousePos) override {}
-            bool IsInFlexBorder(ImVec2 mouse) override {}
+            bool IsMouseHover(ImVec2 mousePos) override { return false; }
+            bool IsInFlexBorder(ImVec2 mouse) override { return false; }
             void Amplify(ImVec2 mouse) override {}
             void Flex(double dist) override {}
             std::string GetName() const override { return "LineShape"; }
             Quad GetBounds(ImVec2 pos) override{ return Quad();}
-            Shape* Copy() override {}
+            Shape* Copy() override { return nullptr; }
         private:
             ImVec2 mPointBegin;
             ImVec2 mPointEnd;

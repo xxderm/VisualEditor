@@ -9,7 +9,7 @@ namespace VisualEditor::Graphics {
         void Render() override;
         void Load(nlohmann::json* data, uint32_t* index) override;
         void Save(nlohmann::json* data, uint32_t* index) override;
-        ImVec2 GetSize() override { return ImVec2(mRadius, mRadius); };
+        ImVec2 GetSize() override { return ImVec2(mRadius * 2., mRadius * 2.); };
         std::string GetName() const override { return "CircleShape"; }
         bool IsMouseHover(ImVec2 mousePos) override;
         Quad GetBounds(ImVec2 pos) override;

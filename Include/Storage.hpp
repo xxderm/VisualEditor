@@ -11,6 +11,10 @@ namespace VisualEditor {
             mData = new T[1];
             mCapacity = 1;
         }
+        Storage(uint32_t size) {
+            mData = new T[size];
+            mCapacity = size;
+        }
         Storage(Storage& other) {
             if (this != &other) {
                 delete mData;
