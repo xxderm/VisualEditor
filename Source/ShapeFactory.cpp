@@ -1,4 +1,10 @@
 #include "ShapeFactory.hpp"
+#include "CircleShape.hpp"
+#include "TriangleShape.hpp"
+#include "QuadShape.hpp"
+#include "LineShape.hpp"
+#include "GroupShape.hpp"
+#include "SelectedShape.hpp"
 
 namespace VisualEditor {
     namespace Graphics {

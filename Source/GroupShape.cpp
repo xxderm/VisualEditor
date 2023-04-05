@@ -129,19 +129,24 @@ namespace VisualEditor::Graphics {
         }
     }
 
-    void GroupShape::Save(nlohmann::json *data, uint32_t* index) {
-        for (uint32_t i = 0; i < mEntities.Size(); i++) {
-            mEntities[i]->Save(data, index);
-            if (i == mEntities.Size() - 1) continue;
-            ++(*index);
+    void GroupShape::Save(nlohmann::json *data) {
+        const auto& count = mEntities.Size();
+        (*data)["EntityCount"] = count;
+        (*data)["ShapeType"] = GetShapeType();
+        Shape::Save(data);
+        for (int i = 0; i < count; ++i) {
+            (*data)[std::to_string(i)]["Shape"] = "ShapeGroup";
+            mEntities[i]->Save(&data->at(std::to_string(i)));
         }
     }
 
-    void GroupShape::Load(nlohmann::json *data, uint32_t *index) {
-        for (uint32_t i = 0; i < mEntities.Size(); i++) {
-            mEntities[i]->Load(data, index);
-            if (i == mEntities.Size() - 1) continue;
-            ++(*index);
+    void GroupShape::Load(nlohmann::json *data) {
+        const uint32_t& count = data->at("EntityCount");
+        Shape::Load(data);
+        for (uint32_t i = 0; i < count; i++) {
+            Graphics::ShapeType type = data->at(std::to_string(i)).at("ShapeType");
+            mEntities.Push(Graphics::ShapeFactory::CreateShape(type)->Copy());
+            mEntities.Back()->Load(&data->at(std::to_string(i)));
         }
     }
 

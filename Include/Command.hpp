@@ -1,5 +1,6 @@
 #pragma once
 #include "ShapeFactory.hpp"
+#include "pch.hpp"
 
 namespace VisualEditor {
 

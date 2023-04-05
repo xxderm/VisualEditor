@@ -1,5 +1,6 @@
 #pragma once
 #include "pch.hpp"
+#include "ShapeFactory.hpp"
 
 namespace VisualEditor::Graphics {
 
@@ -37,12 +38,8 @@ namespace VisualEditor::Graphics {
 
     class IMemorable {
     public:
-        // TODO: index fix
-        // TODO: Group save
-        // TODO: 8 lab
-        // TODO: Make abstract shape fabric
-        virtual void Load(nlohmann::json* data, uint32_t* index) = 0;
-        virtual void Save(nlohmann::json* data, uint32_t* index) = 0;
+        virtual void Load(nlohmann::json* data) = 0;
+        virtual void Save(nlohmann::json* data) = 0;
     };
 
     class Shape : public IFlexible, public IMemorable {
@@ -59,11 +56,12 @@ namespace VisualEditor::Graphics {
         virtual Shape* Copy() = 0;
         virtual ImVec2 GetSize() = 0;
         virtual void SetColor(ImVec4 color) { mColor = color; }
-        virtual void Load(nlohmann::json* data, uint32_t* index) override;
-        virtual void Save(nlohmann::json* data, uint32_t* index) override;
+        virtual void Load(nlohmann::json* data) override;
+        virtual void Save(nlohmann::json* data) override;
         void SetPos(ImVec2 pos) { mPosition = pos; }
         void Select(bool status = true) { mSelected = status; }
         virtual std::string GetName() const { return "Shape"; }
+        virtual ShapeType GetShapeType() const = 0;
         ImVec2 GetPosition() const { return mPosition; }
         ImVec4 GetColor() const { return mColor; }
         bool IsSelected() const { return mSelected; }

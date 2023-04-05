@@ -79,6 +79,17 @@ namespace VisualEditor {
             ImGui::TableNextRow();
             ImGui::TableNextRow();
 
+            ImGui::TableSetColumnIndex(0);
+            ImGui::TableSetBgColor(ImGuiTableBgTarget_::ImGuiTableBgTarget_CellBg,
+                                   IM_COL32(81, 81, 81, 255));
+            if (ImGui::Button("Sticky", ImVec2(20, 20)))
+                mOnSetSticky();
+            ImGui::SameLine();
+            ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 5);
+            ImGui::Text("Set sticky");
+            ImGui::TableNextRow();
+            ImGui::TableNextRow();
+
             ImGui::EndTable();
         }
         ImGui::End();
@@ -216,4 +227,7 @@ namespace VisualEditor {
         mOnRedo = fn;
     }
 
+    void EditorView::OnSetSticky(const std::function<void()> &fn) {
+        mOnSetSticky = fn;
+    }
 }

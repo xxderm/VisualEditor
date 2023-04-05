@@ -1,13 +1,7 @@
 #pragma once
-#include "CircleShape.hpp"
-#include "TriangleShape.hpp"
-#include "QuadShape.hpp"
-#include "LineShape.hpp"
-#include "GroupShape.hpp"
-#include "SelectedShape.hpp"
+#include <memory>
 
-namespace VisualEditor {
-    namespace Graphics {
+namespace VisualEditor::Graphics {
 
         enum ShapeType {
             CIRCLE,
@@ -17,10 +11,11 @@ namespace VisualEditor {
             GROUP
         };
 
+        class Shape;
+
         class ShapeFactory final {
         public:
             static std::shared_ptr<Shape> CreateShape(ShapeType shapeType);
         };
 
     }
-}

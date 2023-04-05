@@ -52,6 +52,17 @@ namespace VisualEditor {
         mEditorView->OnRedo([this]() {
             mCmdDispatcher.Redo();
         });
+        mEditorView->OnSetSticky([this]() {
+            for (uint32_t i = 0; i < mEntities->Size(); i++) {
+                if (mEntities->At(i)->GetName() == "SelectedShape") {
+                    auto selectedShape = mEntities->At(i).get()->Copy();
+                    std::shared_ptr<Graphics::Shape> shapePtr = std::make_shared<StickyShape>(
+                            &mStickyEntitiesObserverModel, selectedShape);
+                    mEntities->Push(shapePtr);
+                }
+            }
+            DeleteSelected();
+        });
         mTreeView = std::make_shared<TreeView>(&mEntityModel);
     }
 
@@ -153,6 +164,7 @@ namespace VisualEditor {
             for (int i = 0; i < mEntities->Size(); ++i) {
                 if (mEntities->At(i)->GetName() == "SelectedShape" && !block) {
                     mEntities->At(i)->Move(delta);
+                    mStickyEntitiesObserverModel.SetEntities(&mEntities);
                 }
             }
         }
@@ -165,12 +177,11 @@ namespace VisualEditor {
         std::ofstream f;
         f.open(name.c_str(), std::ios_base::trunc);
         f.clear();
-        uint32_t index = 0;
+        data["EntityCount"] = mEntities->Size();
         for (uint32_t i = 0; i < mEntities->Size(); i++) {
-            mEntities->At(i)->Save(&data, &index);
-            ++index;
+            data[std::to_string(i)]["Shape"] = "Shape";
+            mEntities->At(i)->Save(&data.at(std::to_string(i)));
         }
-        data["EntityCount"] = index;
         auto dump = data.dump(4);
         f.write(dump.data(), dump.size());
         f.close();
@@ -183,14 +194,9 @@ namespace VisualEditor {
         nlohmann::json data = nlohmann::json::parse(f);
         uint32_t count = data["EntityCount"];
         for (uint32_t i = 0; i < count; ++i) {
-            std::string shapeTitle = data[std::to_string(i)]["Name"];
-            if (shapeTitle == "TriangleShape")
-                mEntities->Push(Graphics::ShapeFactory::CreateShape(Graphics::ShapeType::TRIANGLE));
-            if (shapeTitle == "CircleShape")
-                mEntities->Push(Graphics::ShapeFactory::CreateShape(Graphics::ShapeType::CIRCLE));
-            if (shapeTitle == "QuadShape")
-                mEntities->Push(Graphics::ShapeFactory::CreateShape(Graphics::ShapeType::QUAD));
-            mEntities->Back()->Load(&data, &i);
+            Graphics::ShapeType type = data[std::to_string(i)]["ShapeType"];
+            mEntities->Push(Graphics::ShapeFactory::CreateShape(type));
+            mEntities->Back()->Load(&data.at(std::to_string(i)));
         }
     }
 

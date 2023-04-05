@@ -17,14 +17,14 @@ namespace VisualEditor::Graphics {
             GraphicUtility::Grid(mPosition, size);
         }
 
-        void SelectedShape::Load(nlohmann::json *data, uint32_t *index) {
-            Shape::Load(data, index);
-            mShape->Load(data, index);
+        void SelectedShape::Load(nlohmann::json *data) {
+            Shape::Load(data);
+            mShape->Load(data);
         }
 
-        void SelectedShape::Save(nlohmann::json *data, uint32_t *index) {
-            Shape::Save(data, index);
-            mShape->Save(data, index);
+        void SelectedShape::Save(nlohmann::json *data) {
+            Shape::Save(data);
+            mShape->Save(data);
         }
 
         bool SelectedShape::IsMouseHover(ImVec2 mousePos) {

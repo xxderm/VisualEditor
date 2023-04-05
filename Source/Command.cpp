@@ -1,6 +1,6 @@
 #include "Command.hpp"
-
 #include <utility>
+#include "Shape.hpp"
 
 namespace VisualEditor {
 

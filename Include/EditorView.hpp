@@ -2,6 +2,9 @@
 #include "pch.hpp"
 #include "ShapeFactory.hpp"
 #include "Command.hpp"
+#include "GroupShape.hpp"
+#include <vector>
+#include <algorithm>
 
 namespace VisualEditor {
 
@@ -84,6 +87,59 @@ namespace VisualEditor {
         EntitiesModel* mModel;
     };
 
+    class StickyShape final : virtual public Graphics::Shape, public Graphics::IObserver {
+    public:
+        StickyShape(EntitiesModel* model, Shape* stickyShape) : mModel(model), mShape(stickyShape) {
+            mModel->AddObserver(this);
+            mPosition = mShape->GetPosition();
+        }
+        void Render() override { mShape->Render(); }
+        void Update() override {
+            auto entities = mModel->GetEntities()->get();
+            for (int i = 0; i < entities->Size(); ++i) {
+                auto it = find (mStickyIndices.begin(), mStickyIndices.end(), i);
+                if (it != mStickyIndices.end())
+                    continue;
+                auto entity = entities->At(i);
+                auto stickyPos = mShape->GetPosition();
+                auto entityPos = entity->GetPosition();
+                auto stickySize = mShape->GetSize();
+                auto dist = sqrt( ((stickyPos.x - entityPos.x) * (stickyPos.x - entityPos.x))
+                                  + ((stickyPos.y - entityPos.y) * (stickyPos.y - entityPos.y)) );
+                if (dist < stickySize.x * 1.24) {
+                    if (entity->GetName() != "SelectedShape") {
+                        mStickyIndices.push_back(i);
+                    }
+
+                }
+            }
+        }
+        void Load(nlohmann::json* data) override { mShape->Load(data); }
+        void Save(nlohmann::json* data) override { mShape->Save(data); }
+        void Move(ImVec2 delta) override {
+            mShape->Move(delta);
+            Graphics::Shape::Move(delta);
+            for (const auto& index : mStickyIndices) {
+                mModel->GetEntities()->get()->At(index)->Move(delta);
+            }
+        }
+        ImVec2 GetSize() override { return mShape->GetSize(); };
+        bool IsMouseHover(ImVec2 mousePos) override { return mShape->IsMouseHover(mousePos); }
+        bool IsInFlexBorder(ImVec2 mouse) override { return mShape->IsInFlexBorder(mouse); }
+        void Amplify(ImVec2 mouse) override { return mShape->Amplify(mouse); }
+        void Flex(double dist) override { return mShape->Flex(dist); }
+        std::string GetName() const override { return "StickyShape"; }
+        Graphics::ShapeType GetShapeType() const override { return mShape->GetShapeType(); }
+        void SetColor(ImVec4 color) override { mShape->SetColor(color); }
+        Shape* Copy() override { return mShape->Copy(); }
+        Graphics::Quad GetBounds(ImVec2 pos) override { return mShape->GetBounds(pos); }
+    private:
+        Shape* mShape = nullptr;
+        EntitiesModel* mModel;
+        std::vector<int> mStickyIndices;
+        ImVec2 lastMoveDeltas;
+    };
+
     class EditorView;
     using EditorViewPtr = std::shared_ptr<EditorView>;
 
@@ -99,6 +155,7 @@ namespace VisualEditor {
         void OnDelete(const std::function<void()>& fn);
         void OnUndo(const std::function<void()>& fn);
         void OnRedo(const std::function<void()>& fn);
+        void OnSetSticky(const std::function<void()>& fn);
         void SetEntities(const std::shared_ptr<Storage<std::shared_ptr<Graphics::Shape>>>& entities);
         void SetActions(const std::stack<std::shared_ptr<ICommand>>& actions);
         ImVec2 GetScenePos() const { return mScenePos; }
@@ -121,6 +178,7 @@ namespace VisualEditor {
         std::function<void()> mOnDelete;
         std::function<void()> mOnUndo;
         std::function<void()> mOnRedo;
+        std::function<void()> mOnSetSticky;
         GLuint mTriangleIcon{};
         GLuint mCircleIcon{};
         GLuint mQuadIcon{};

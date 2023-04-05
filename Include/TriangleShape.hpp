@@ -7,8 +7,8 @@ namespace VisualEditor {
         public:
             TriangleShape() = default;
             TriangleShape(const TriangleShape& other);
-            void Load(nlohmann::json* data, uint32_t *index) override;
-            void Save(nlohmann::json* data, uint32_t *index) override;
+            void Load(nlohmann::json* data) override;
+            void Save(nlohmann::json* data) override;
             void Render() override;
             ImVec2 GetSize() override { return ImVec2(mSize * 2., mSize * 2.); };
             bool IsMouseHover(ImVec2 mousePos) override;
@@ -16,6 +16,7 @@ namespace VisualEditor {
             void Amplify(ImVec2 mouse) override;
             void Flex(double dist) override;
             std::string GetName() const override { return "TriangleShape"; }
+            ShapeType GetShapeType() const override { return ShapeType::TRIANGLE; }
             Quad GetBounds(ImVec2 pos) override;
             Shape* Copy() override;
         private:

@@ -1,6 +1,7 @@
 #pragma once
 #include "EditorView.hpp"
 #include <Storage.hpp>
+#include "SelectedShape.hpp"
 
 namespace VisualEditor {
 
@@ -25,6 +26,7 @@ namespace VisualEditor {
         ImVec2 mScrSize;
         SDL_SystemCursor mCursor = SDL_SYSTEM_CURSOR_ARROW;
         EntitiesModel mEntityModel;
+        EntitiesModel mStickyEntitiesObserverModel;
         std::shared_ptr<TreeView> mTreeView;
         bool mMousePressed = false;
         bool mShift = false;

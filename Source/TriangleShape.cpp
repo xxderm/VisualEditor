@@ -65,15 +65,15 @@ namespace VisualEditor {
             this->mSize = other.mSize;
         }
 
-        void TriangleShape::Save(nlohmann::json *data, uint32_t* index) {
-            Shape::Save(data, index);
-            (*data)[std::to_string(*index)]["Name"] = GetName();
-            (*data)[std::to_string(*index)]["Size"] = mSize;
+        void TriangleShape::Save(nlohmann::json *data) {
+            Shape::Save(data);
+            (*data)["Name"] = GetName();
+            (*data)["Size"] = mSize;
         }
 
-        void TriangleShape::Load(nlohmann::json *data, uint32_t *index) {
-            Shape::Load(data, index);
-            mSize = (*data)[std::to_string(*index)]["Size"];
+        void TriangleShape::Load(nlohmann::json *data) {
+            Shape::Load(data);
+            mSize = (*data)["Size"];
         }
 
     }

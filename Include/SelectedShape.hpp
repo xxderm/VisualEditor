@@ -8,10 +8,11 @@ namespace VisualEditor {
             SelectedShape() = default;
             explicit SelectedShape(const std::shared_ptr<Shape>& shape);
             void Render() override;
-            void Load(nlohmann::json* data, uint32_t* index) override;
-            void Save(nlohmann::json* data, uint32_t* index) override;
+            void Load(nlohmann::json* data) override;
+            void Save(nlohmann::json* data) override;
             void SetColor(ImVec4 color) override { mShape->SetColor(color); }
             void Move(ImVec2 delta) override { mShape->Move(delta); Shape::Move(delta); }
+            ShapeType GetShapeType() const override { return mShape->GetShapeType(); }
             ImVec2 GetSize() override { return mShape->GetSize(); };
             bool IsMouseHover(ImVec2 mousePos) override;
             bool IsInFlexBorder(ImVec2 mouse) override;

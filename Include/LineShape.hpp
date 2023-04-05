@@ -7,12 +7,13 @@ namespace VisualEditor {
         public:
             LineShape() = default;
             LineShape(const LineShape& other) {}
-            void Load(nlohmann::json* data, uint32_t* index) override {}
-            void Save(nlohmann::json* data, uint32_t* index) override {}
+            void Load(nlohmann::json* data) override {}
+            void Save(nlohmann::json* data) override {}
             ImVec2 GetSize() override { return ImVec2(0, 0); };
             void Render() override;
             bool IsMouseHover(ImVec2 mousePos) override { return false; }
             bool IsInFlexBorder(ImVec2 mouse) override { return false; }
+            ShapeType GetShapeType() const override { return ShapeType::LINE; }
             void Amplify(ImVec2 mouse) override {}
             void Flex(double dist) override {}
             std::string GetName() const override { return "LineShape"; }

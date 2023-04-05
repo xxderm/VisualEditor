@@ -55,17 +55,17 @@ namespace VisualEditor{
             this->mSize = other.mSize;
         }
 
-        void QuadShape::Save(nlohmann::json *data, uint32_t* index) {
-            Shape::Save(data, index);
-            (*data)[std::to_string(*index)]["Name"] = GetName();
-            (*data)[std::to_string(*index)]["Size"]["X"] = mSize.x;
-            (*data)[std::to_string(*index)]["Size"]["Y"] = mSize.y;
+        void QuadShape::Save(nlohmann::json *data) {
+            Shape::Save(data);
+            (*data)["Name"] = GetName();
+            (*data)["Size"]["X"] = mSize.x;
+            (*data)["Size"]["Y"] = mSize.y;
         }
 
-        void QuadShape::Load(nlohmann::json *data, uint32_t *index) {
-            Shape::Load(data, index);
-            mSize.x = (*data)[std::to_string(*index)]["Size"]["X"];
-            mSize.y = (*data)[std::to_string(*index)]["Size"]["Y"];
+        void QuadShape::Load(nlohmann::json *data) {
+            Shape::Load(data);
+            mSize.x = (*data)["Size"]["X"];
+            mSize.y = (*data)["Size"]["Y"];
         }
 
     }

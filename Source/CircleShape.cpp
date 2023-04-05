@@ -51,15 +51,15 @@ namespace VisualEditor::Graphics {
         this->mRadius = other.mRadius;
     }
 
-    void CircleShape::Save(nlohmann::json* data, uint32_t* index) {
-        Shape::Save(data, index);
-        (*data)[std::to_string(*index)]["Name"] = GetName();
-        (*data)[std::to_string(*index)]["Radius"] = mRadius;
+    void CircleShape::Save(nlohmann::json* data) {
+        Shape::Save(data);
+        (*data)["Name"] = GetName();
+        (*data)["Radius"] = mRadius;
     }
 
-    void CircleShape::Load(nlohmann::json *data, uint32_t *index) {
-        Shape::Load(data, index);
-        mRadius = (*data)[std::to_string(*index)]["Radius"];
+    void CircleShape::Load(nlohmann::json *data) {
+        Shape::Load(data);
+        mRadius = (*data)["Radius"];
     }
 
 }
