@@ -106,7 +106,7 @@ namespace VisualEditor {
                 auto stickySize = mShape->GetSize();
                 auto dist = sqrt( ((stickyPos.x - entityPos.x) * (stickyPos.x - entityPos.x))
                                   + ((stickyPos.y - entityPos.y) * (stickyPos.y - entityPos.y)) );
-                if (dist < stickySize.x * 1.24) {
+                if (dist < stickySize.x * 1.22) {
                     if (entity->GetName() != "SelectedShape") {
                         mStickyIndices.push_back(i);
                     }

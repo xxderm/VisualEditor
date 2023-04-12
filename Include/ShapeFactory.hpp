@@ -3,19 +3,19 @@
 
 namespace VisualEditor::Graphics {
 
-        enum ShapeType {
-            CIRCLE,
-            TRIANGLE,
-            QUAD,
-            LINE,
-            GROUP
-        };
+    enum ShapeType {
+        CIRCLE,
+        TRIANGLE,
+        QUAD,
+        LINE,
+        GROUP
+    };
 
-        class Shape;
+    class Shape;
 
-        class ShapeFactory final {
-        public:
-            static std::shared_ptr<Shape> CreateShape(ShapeType shapeType);
-        };
+    class ShapeFactory final {
+    public:
+        static std::shared_ptr<Shape> CreateShape(ShapeType shapeType);
+    };
 
-    }
+}
